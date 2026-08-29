@@ -1,4 +1,6 @@
 import type { Assumptions } from "../types";
+import { TERM_HELP } from "../lib/glossary";
+import { Hint } from "./Hint";
 
 type Props = {
   value: Assumptions;
@@ -14,7 +16,7 @@ export function AssumptionsBar({ value, onChange }: Props) {
   return (
     <section className="assumptions panel">
       <div className="field">
-        <label className="field-label">Statutory rate</label>
+        <label className="field-label"><Hint entry={TERM_HELP.statutoryRate}>Statutory rate</Hint></label>
         <input
           type="number"
           step="0.01"
@@ -25,7 +27,7 @@ export function AssumptionsBar({ value, onChange }: Props) {
         />
       </div>
       <div className="field">
-        <label className="field-label">Hold (months)</label>
+        <label className="field-label"><Hint entry={TERM_HELP.hold}>Hold (months)</Hint></label>
         <input
           type="number"
           min="1"
@@ -35,7 +37,7 @@ export function AssumptionsBar({ value, onChange }: Props) {
         />
       </div>
       <div className="field">
-        <label className="field-label">As-is BPO haircut</label>
+        <label className="field-label"><Hint entry={TERM_HELP.haircut}>As-is BPO haircut</Hint></label>
         <input
           type="number"
           step="0.05"
@@ -46,7 +48,7 @@ export function AssumptionsBar({ value, onChange }: Props) {
         />
       </div>
       <div className="field">
-        <label className="field-label">Modeled overbid $</label>
+        <label className="field-label"><Hint entry={TERM_HELP.overbid}>Modeled overbid $</Hint></label>
         <input
           type="number"
           min="0"
@@ -55,7 +57,7 @@ export function AssumptionsBar({ value, onChange }: Props) {
         />
       </div>
       <div className="field">
-        <label className="field-label">Legal / FC overhead</label>
+        <label className="field-label"><Hint entry={TERM_HELP.legal}>Legal / FC overhead</Hint></label>
         <input
           type="number"
           min="0"
@@ -64,7 +66,7 @@ export function AssumptionsBar({ value, onChange }: Props) {
         />
       </div>
       <div className="field">
-        <label className="field-label">Max effective LTV</label>
+        <label className="field-label"><Hint entry={TERM_HELP.maxLtv}>Max effective LTV</Hint></label>
         <input
           type="number"
           step="0.01"

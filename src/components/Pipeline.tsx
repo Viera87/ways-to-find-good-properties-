@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import type { Assumptions, Lien, Underwriting, Verdict } from "../types";
 import { acresLabel, money, moneyExact, percent } from "../lib/format";
+import { TERM_HELP } from "../lib/glossary";
+import { Hint } from "./Hint";
 import { LienDetail } from "./LienDetail";
+import { VerdictChip } from "./VerdictChip";
 
 export type Ranked = { lien: Lien; uw: Underwriting };
 
@@ -123,7 +126,9 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
             </select>
           </div>
           <div className="field">
-            <label className="field-label">Verdict</label>
+            <label className="field-label">
+              <Hint entry={TERM_HELP.verdict}>Verdict</Hint>
+            </label>
             <select
               value={verdict}
               onChange={(e) => {
@@ -209,14 +214,14 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
           <table>
             <thead>
               <tr>
-                <th>Score</th>
-                <th>Verdict</th>
+                <th><Hint entry={TERM_HELP.score}>Score</Hint></th>
+                <th><Hint entry={TERM_HELP.verdict}>Verdict</Hint></th>
                 <th>Address</th>
-                <th>Face</th>
-                <th>Assessed</th>
-                <th>Eff. LTV</th>
-                <th>Net yield</th>
-                <th>Flags</th>
+                <th><Hint entry={TERM_HELP.face}>Face</Hint></th>
+                <th><Hint entry={TERM_HELP.assessed}>Assessed</Hint></th>
+                <th><Hint entry={TERM_HELP.ltv}>Eff. LTV</Hint></th>
+                <th><Hint entry={TERM_HELP.yield}>Net yield</Hint></th>
+                <th><Hint entry={TERM_HELP.flags}>Flags</Hint></th>
               </tr>
             </thead>
             <tbody>
@@ -227,7 +232,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
                   onClick={() => onSelect(lien.id)}
                 >
                   <td className="mono">{uw.score}</td>
-                  <td><span className={`verdict ${uw.verdict}`}>{uw.verdict}</span></td>
+                  <td><VerdictChip verdict={uw.verdict} /></td>
                   <td>
                     {lien.address || "—"}
                     <div className="owner">{lien.id} · {acresLabel(lien.acres, lien.sqft)}</div>

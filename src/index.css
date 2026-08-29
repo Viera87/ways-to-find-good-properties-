@@ -271,6 +271,54 @@ tr.selected td {
   color: var(--info);
 }
 
+.hint {
+  cursor: help;
+}
+
+.field-label .hint,
+.kpi-label .hint,
+th .hint,
+.section-kicker .hint {
+  border-bottom: 1px dotted var(--muted);
+}
+
+.hint:hover,
+.hint:focus-visible {
+  outline: none;
+}
+
+.hint:hover .verdict,
+.hint:focus-visible .verdict {
+  box-shadow: 0 0 0 1px currentColor;
+}
+
+.hint-pop {
+  position: fixed;
+  z-index: 80;
+  background: #101820;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  pointer-events: none;
+}
+
+.hint-pop strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: var(--gold);
+}
+
+.hint-pop p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: normal;
+}
+
 .pager {
   display: flex;
   justify-content: space-between;

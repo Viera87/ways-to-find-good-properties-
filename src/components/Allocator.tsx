@@ -2,6 +2,9 @@ import { useMemo, useState } from "react";
 import type { Assumptions, Lien } from "../types";
 import { allocateCapital } from "../lib/optimize";
 import { money, moneyExact, percent } from "../lib/format";
+import { TERM_HELP } from "../lib/glossary";
+import { Hint } from "./Hint";
+import { VerdictChip } from "./VerdictChip";
 
 type Props = {
   liens: Lien[];
@@ -88,11 +91,11 @@ export function Allocator({ liens, assumptions, onOpen }: Props) {
             <tr>
               <th>#</th>
               <th>Address</th>
-              <th>Verdict</th>
-              <th>Score</th>
-              <th>Auction cash</th>
-              <th>Eff. LTV</th>
-              <th>Net yield</th>
+              <th><Hint entry={TERM_HELP.verdict}>Verdict</Hint></th>
+              <th><Hint entry={TERM_HELP.score}>Score</Hint></th>
+              <th><Hint entry={TERM_HELP.auctionCash}>Auction cash</Hint></th>
+              <th><Hint entry={TERM_HELP.ltv}>Eff. LTV</Hint></th>
+              <th><Hint entry={TERM_HELP.yield}>Net yield</Hint></th>
             </tr>
           </thead>
           <tbody>
@@ -103,7 +106,7 @@ export function Allocator({ liens, assumptions, onOpen }: Props) {
                   {row.lien.address}
                   <div className="owner">{row.lien.id}</div>
                 </td>
-                <td><span className={`verdict ${row.uw.verdict}`}>{row.uw.verdict}</span></td>
+                <td><VerdictChip verdict={row.uw.verdict} /></td>
                 <td className="mono">{row.uw.score}</td>
                 <td className="mono">{moneyExact(row.uw.auctionDayCapital)}</td>
                 <td className="mono">{percent(row.uw.effectiveLtv)}</td>

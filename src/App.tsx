@@ -7,6 +7,8 @@ import { Methodology } from "./components/Methodology";
 import { Pipeline } from "./components/Pipeline";
 import { DEFAULT_ASSUMPTIONS, SALE, rankedLiens } from "./lib/underwrite";
 import { money, percent } from "./lib/format";
+import { TERM_HELP } from "./lib/glossary";
+import { Hint } from "./components/Hint";
 
 const liens = rawLiens as Lien[];
 
@@ -51,27 +53,27 @@ export function App() {
       <main className="page">
         <section className="kpis">
           <article className="kpi">
-            <div className="kpi-label">Universe</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.universe}>Universe</Hint></div>
             <div className="kpi-value">{liens.length.toLocaleString()}</div>
           </article>
           <article className="kpi">
-            <div className="kpi-label">Accumulate</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.accumulateKpi}>Accumulate</Hint></div>
             <div className="kpi-value">{accumulate.length}</div>
           </article>
           <article className="kpi">
-            <div className="kpi-label">Pass LTV gate</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.passGate}>Pass LTV gate</Hint></div>
             <div className="kpi-value">{underwriteable.length}</div>
           </article>
           <article className="kpi">
-            <div className="kpi-label">Median face</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.medianFace}>Median face</Hint></div>
             <div className="kpi-value">{money(medianFace)}</div>
           </article>
           <article className="kpi">
-            <div className="kpi-label">Top-25 auction cash</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.top25}>Top-25 auction cash</Hint></div>
             <div className="kpi-value">{money(topBook)}</div>
           </article>
           <article className="kpi">
-            <div className="kpi-label">Max eff. LTV</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.maxLtv}>Max eff. LTV</Hint></div>
             <div className="kpi-value">{percent(assumptions.maxEffectiveLtv)}</div>
           </article>
         </section>

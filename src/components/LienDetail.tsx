@@ -1,6 +1,9 @@
 import type { Assumptions, Lien, Underwriting } from "../types";
 import { diligenceLinks } from "../lib/diligence";
 import { acresLabel, moneyExact, percentExact } from "../lib/format";
+import { TERM_HELP } from "../lib/glossary";
+import { Hint } from "./Hint";
+import { VerdictChip } from "./VerdictChip";
 import { useEffect, useMemo, useState } from "react";
 
 const CHECKS = [
@@ -54,46 +57,46 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
         <div className="score-orb">
           <div>
             <strong>{uw.score}</strong>
-            <div className="section-kicker">Score</div>
+            <div className="section-kicker"><Hint entry={TERM_HELP.score}>Score</Hint></div>
           </div>
         </div>
       </div>
 
       <div style={{ marginTop: 12 }}>
-        <span className={`verdict ${uw.verdict}`}>{uw.verdict}</span>
+        <VerdictChip verdict={uw.verdict} />
       </div>
 
       <div className="metrics">
         <div className="metric">
-          <div className="field-label">Face / taxes due</div>
+          <div className="field-label"><Hint entry={TERM_HELP.face}>Face / taxes due</Hint></div>
           <div className="metric-value">{moneyExact(lien.amountDue)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">SDAT assessed</div>
+          <div className="field-label"><Hint entry={TERM_HELP.assessed}>SDAT assessed</Hint></div>
           <div className="metric-value">{moneyExact(lien.assessedValue)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">Conservative BPO</div>
+          <div className="field-label"><Hint entry={TERM_HELP.bpo}>Conservative BPO</Hint></div>
           <div className="metric-value">{moneyExact(uw.conservativeBpo)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">Effective LTV</div>
+          <div className="field-label"><Hint entry={TERM_HELP.ltv}>Effective LTV</Hint></div>
           <div className="metric-value">{percentExact(uw.effectiveLtv)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">Auction-day cash</div>
+          <div className="field-label"><Hint entry={TERM_HELP.auctionCash}>Auction-day cash</Hint></div>
           <div className="metric-value">{moneyExact(uw.auctionDayCapital)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">High-bid premium</div>
+          <div className="field-label"><Hint entry={TERM_HELP.hbp}>High-bid premium</Hint></div>
           <div className="metric-value">{moneyExact(uw.highBidPremium)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">Net annualized yield</div>
+          <div className="field-label"><Hint entry={TERM_HELP.yield}>Net annualized yield</Hint></div>
           <div className="metric-value">{percentExact(uw.netAnnualizedYield)}</div>
         </div>
         <div className="metric">
-          <div className="field-label">HBP drag</div>
+          <div className="field-label"><Hint entry={TERM_HELP.hbp}>HBP drag</Hint></div>
           <div className="metric-value">{uw.hbpDragBps.toFixed(0)} bps</div>
         </div>
       </div>
@@ -127,7 +130,9 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
         <div className="check-list">
           {uw.flags.map((flag) => (
             <div key={flag.id}>
-              <span className={`flag ${flag.severity}`}>P{flag.phase} {flag.severity}</span>{" "}
+              <Hint entry={TERM_HELP[flag.severity]}>
+                <span className={`flag ${flag.severity}`}>P{flag.phase} {flag.severity}</span>
+              </Hint>{" "}
               <strong>{flag.title}</strong>
               <div className="owner">{flag.detail}</div>
             </div>
