@@ -84,6 +84,7 @@ a {
 
 .nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -452,6 +453,55 @@ th .hint,
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   gap: 16px;
+}
+
+.counties {
+  display: grid;
+  gap: 16px;
+}
+
+.import-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.import-row select {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-width: 240px;
+}
+
+.import-error {
+  color: var(--bad);
+  margin: 10px 0 0;
+}
+
+.status-pill {
+  display: inline-block;
+  max-width: 280px;
+  white-space: normal;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.status-pill.held {
+  color: var(--warn);
+}
+
+.status-pill.window {
+  color: var(--good);
+}
+
+.table-tools input {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
 }
 
 @media (max-width: 1100px) {

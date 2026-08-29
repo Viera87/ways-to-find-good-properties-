@@ -3,23 +3,31 @@ import rawLiens from "./data/liens.json";
 import type { Assumptions, Lien } from "./types";
 import { AssumptionsBar } from "./components/AssumptionsBar";
 import { Allocator } from "./components/Allocator";
+import { Counties } from "./components/Counties";
 import { Methodology } from "./components/Methodology";
 import { Pipeline } from "./components/Pipeline";
-import { DEFAULT_ASSUMPTIONS, SALE, rankedLiens } from "./lib/underwrite";
+import { DEFAULT_ASSUMPTIONS, rankedLiens } from "./lib/underwrite";
 import { money, percent } from "./lib/format";
 import { TERM_HELP } from "./lib/glossary";
 import { Hint } from "./components/Hint";
 
-const liens = rawLiens as Lien[];
+const bundled = rawLiens as Lien[];
 
-type View = "pipeline" | "allocator" | "method";
+type View = "pipeline" | "allocator" | "counties" | "method";
 
 export function App() {
   const [view, setView] = useState<View>("pipeline");
   const [assumptions, setAssumptions] = useState<Assumptions>(DEFAULT_ASSUMPTIONS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [book, setBook] = useState({
+    countyId: "baltimore-county",
+    countyName: "Baltimore County, Maryland",
+    source: "2026 advertising file",
+    liens: bundled,
+  });
 
-  const ranked = useMemo(() => rankedLiens(liens, assumptions), [assumptions]);
+  const liens = book.liens;
+  const ranked = useMemo(() => rankedLiens(liens, assumptions), [liens, assumptions]);
   const accumulate = ranked.filter((r) => r.uw.verdict === "ACCUMULATE");
   const underwriteable = ranked.filter((r) => r.uw.verdict === "ACCUMULATE" || r.uw.verdict === "UNDERWRITE");
   const medianFace = ranked[Math.floor(ranked.length / 2)]?.lien.amountDue ?? 0;
@@ -39,14 +47,17 @@ export function App() {
           <button className={view === "allocator" ? "active" : ""} onClick={() => setView("allocator")}>
             Allocator
           </button>
+          <button className={view === "counties" ? "active" : ""} onClick={() => setView("counties")}>
+            <Hint entry={TERM_HELP.counties}>Counties</Hint>
+          </button>
           <button className={view === "method" ? "active" : ""} onClick={() => setView("method")}>
             Protocol
           </button>
         </nav>
         <div className="sale-meta">
-          {SALE.county}
+          {book.countyName}
           <br />
-          Collector’s sale {SALE.saleDate}
+          {book.source} · {liens.length.toLocaleString()} names
         </div>
       </header>
 
@@ -94,6 +105,17 @@ export function App() {
             assumptions={assumptions}
             onOpen={(id) => {
               setSelectedId(id);
+              setView("pipeline");
+            }}
+          />
+        ) : null}
+        {view === "counties" ? (
+          <Counties
+            activeCounty={book.countyId}
+            lienCount={liens.length}
+            onImport={(countyId, countyName, next, fileName) => {
+              setBook({ countyId, countyName, source: fileName, liens: next });
+              setSelectedId(null);
               setView("pipeline");
             }}
           />

@@ -42,6 +42,17 @@ export function Methodology() {
       </section>
 
       <section className="detail-card">
+        <h3>Statewide calendar — not a live feed</h3>
+        <p>
+          Maryland’s 24 collectors run sales between March and October. DAT publishes confirmed dates.
+          There is no statewide bidder registration and no public API for live listings. Register on each
+          county portal (typically $100–$150, W-9, ACH, collector terms). Unsold names often move OTC at
+          the finance office after the auction. Import that county’s advertising file on the Counties tab
+          to run the same four-phase screen.
+        </p>
+      </section>
+
+      <section className="detail-card">
         <h3>What this desk does not do</h3>
         <p>It does not replace a title search, Phase I ESA, PACER login, or counsel. Automated flags are heuristics from the advertising file — owner language, lot size, situs, and LTV — so a clean score is an invitation to underwrite, not a bid ticket.</p>
       </section>

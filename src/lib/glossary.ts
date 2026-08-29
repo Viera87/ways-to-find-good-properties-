@@ -63,7 +63,7 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   },
   universe: {
     title: "Universe",
-    body: "Every parcel on the 2026 Baltimore County tax-sale advertising list that parsed cleanly (2,601 names).",
+    body: "Certificates in the book currently loaded — Baltimore County’s advertising file by default, or any county list you import on the Counties tab.",
   },
   medianFace: {
     title: "Median face",
@@ -116,6 +116,10 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   overbid: {
     title: "Modeled overbid",
     body: "Extra dollars above taxes due, used to stress high-bid premium and takeout cost. Surplus bid stays on credit until judgment; only HBP and taxes leave on sale day.",
+  },
+  counties: {
+    title: "Counties",
+    body: "Maryland’s 24 collectors each run their own sale. There is no statewide registration or live listing API. Open the official portal, register separately, then import that county’s advertising file.",
   },
   legal: {
     title: "Legal / foreclosure overhead",
