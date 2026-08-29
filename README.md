@@ -11,6 +11,8 @@ Tax certificates are non-standard, illiquid, and local. This desk ranks every ad
 
 The advertising list is bundled. Change the underwriting sliders and the entire 2,601-certificate book re-ranks in the browser.
 
+**Accumulate** is reserved for house-scale collateral ($75k–$750k assessed, face ≤ $15k, score ≥ 90). Office parks and jumbo tickets can still be opened via the commercial-takeout preset — they are not treated as the default “best buy.”
+
 ## Run
 
 ```bash

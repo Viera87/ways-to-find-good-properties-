@@ -92,14 +92,18 @@ export function underwrite(lien: Lien, a: Assumptions): Underwriting {
   const hard = flags.filter((f) => f.severity === "hard").length;
   const watch = flags.filter((f) => f.severity === "watch").length;
 
-  const equity = clamp(((a.maxEffectiveLtv - effectiveLtv) / a.maxEffectiveLtv) * 40 + 8, 0, 40);
+  const houseScale = lien.assessedValue >= 75000 && lien.assessedValue <= 750000;
+  const equity = clamp(((0.18 - effectiveLtv) / 0.12) * 40, 0, 40);
   const yieldPts = clamp((netAnnualizedYield / Math.max(a.statutoryRate, 0.01)) * 18, 0, 22);
   const collateral = clamp(
     22 -
       (lien.hasSitus ? 0 : 8) -
       (lien.acres != null && lien.acres < 0.08 ? 7 : 0) -
       (lien.assessedValue < 15000 ? 10 : 0) -
-      (flags.some((f) => f.id === "easement-drainage") ? 10 : 0),
+      (lien.assessedValue >= 1000000 ? 8 : 0) -
+      (lien.assessedValue >= 3000000 ? 6 : 0) -
+      (flags.some((f) => f.id === "easement-drainage") ? 10 : 0) +
+      (houseScale ? 4 : 0),
     0,
     22,
   );
@@ -108,11 +112,14 @@ export function underwrite(lien: Lien, a: Assumptions): Underwriting {
   let score = Math.round(equity + yieldPts + collateral + title);
   if (hard >= 2) score = Math.min(score, 54);
   if (effectiveLtv > a.maxEffectiveLtv) score = Math.min(score, 48);
-  if (flags.some((f) => f.id === "exempt-owner" || f.id === "low-av")) score = Math.min(score, 35);
+  if (flags.some((f) => f.id === "exempt-owner" || f.id === "low-av" || f.id === "commercial-scale")) {
+    score = Math.min(score, flags.some((f) => f.id === "exempt-owner" || f.id === "low-av") ? 35 : 58);
+  }
   score = clamp(Math.round(score), 0, 99);
 
+  const houseTicket = houseScale && lien.amountDue <= 15000 && lien.hasSitus;
   let verdict: Verdict = "DECLINE";
-  if (score >= 78 && effectiveLtv <= 0.15 && hard === 0 && lien.hasSitus) verdict = "ACCUMULATE";
+  if (score >= 90 && effectiveLtv <= 0.15 && hard === 0 && houseTicket) verdict = "ACCUMULATE";
   else if (score >= 62 && effectiveLtv <= a.maxEffectiveLtv && hard === 0) verdict = "UNDERWRITE";
   else if (score >= 48 && hard < 2) verdict = "MONITOR";
 
@@ -147,5 +154,10 @@ export function underwrite(lien: Lien, a: Assumptions): Underwriting {
 export function rankedLiens(liens: Lien[], assumptions: Assumptions) {
   return liens
     .map((lien) => ({ lien, uw: underwrite(lien, assumptions) }))
-    .sort((a, b) => b.uw.score - a.uw.score || a.uw.effectiveLtv - b.uw.effectiveLtv);
+    .sort(
+      (a, b) =>
+        b.uw.score - a.uw.score ||
+        a.uw.effectiveLtv - b.uw.effectiveLtv ||
+        b.uw.netProfit - a.uw.netProfit,
+    );
 }

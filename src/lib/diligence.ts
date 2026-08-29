@@ -94,6 +94,28 @@ export function collectFlags(lien: Lien): DiligenceFlag[] {
     });
   }
 
+  if (lien.assessedValue >= 1000000) {
+    flags.push({
+      id: "commercial-scale",
+      phase: 1,
+      severity: lien.assessedValue >= 3000000 ? "hard" : "watch",
+      title: "Commercial-scale assessment",
+      detail:
+        "SDAT value is in institutional / office / industrial territory. Do not treat a thin tax bill on a $1m+ building as a clean residential certificate — zoning, environmental, and entity-credit work come first.",
+    });
+  }
+
+  if (lien.amountDue >= 25000) {
+    flags.push({
+      id: "jumbo-face",
+      phase: 3,
+      severity: lien.amountDue >= 75000 ? "hard" : "watch",
+      title: "Jumbo certificate / capital concentration",
+      detail:
+        "Face size concentrates the book in one name. Model subsequent taxes, HBP, and a single bankruptcy stay against the whole ticket before allocating.",
+    });
+  }
+
   if (DESC_HARD.some((re) => re.test(desc))) {
     flags.push({
       id: "easement-drainage",

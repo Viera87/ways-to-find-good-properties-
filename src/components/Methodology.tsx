@@ -33,7 +33,7 @@ export function Methodology() {
       <section className="detail-card">
         <h3>Phase 3 — Quantitative valuation</h3>
         <pre className="formula">{`Effective LTV = (Face + Overbid + Subsequent taxes + Legal/FC + HBP) / Conservative as-is BPO`}</pre>
-        <p>Target an absolute maximum of 15–20% on a haircut BPO, not raw SDAT value. Default haircut is 35% off assessment to proxy as-is broker opinion during the statutory hold.</p>
+        <p>Target an absolute maximum of 15–20% on a haircut BPO, not raw SDAT value. Default haircut is 35% off assessment to proxy as-is broker opinion during the statutory hold. A thin tax bill on a $7m office building is not a free lunch — commercial-scale assessments are flagged and kept out of the Accumulate book until you opt into a commercial takeout screen.</p>
       </section>
 
       <section className="detail-card">

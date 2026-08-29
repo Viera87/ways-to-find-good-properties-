@@ -19,6 +19,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
   const [district, setDistrict] = useState("all");
   const [verdict, setVerdict] = useState<"all" | Verdict>("all");
   const [situs, setSitus] = useState<"all" | "situs" | "vacant">("all");
+  const [scale, setScale] = useState<"all" | "house" | "commercial">("house");
   const [maxLtv, setMaxLtv] = useState(0.2);
   const [maxFace, setMaxFace] = useState(25000);
   const [page, setPage] = useState(0);
@@ -35,6 +36,8 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       if (verdict !== "all" && uw.verdict !== verdict) return false;
       if (situs === "situs" && !lien.hasSitus) return false;
       if (situs === "vacant" && lien.hasSitus) return false;
+      if (scale === "house" && (lien.assessedValue < 75000 || lien.assessedValue > 750000)) return false;
+      if (scale === "commercial" && lien.assessedValue < 750000) return false;
       if (uw.effectiveLtv > maxLtv) return false;
       if (lien.amountDue > maxFace) return false;
       if (query) {
@@ -43,7 +46,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       }
       return true;
     });
-  }, [rows, q, district, verdict, situs, maxLtv, maxFace]);
+  }, [rows, q, district, verdict, situs, scale, maxLtv, maxFace]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE));
   const safePage = Math.min(page, pageCount - 1);
@@ -150,6 +153,20 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
             </select>
           </div>
           <div className="field">
+            <label className="field-label">Collateral scale</label>
+            <select
+              value={scale}
+              onChange={(e) => {
+                setScale(e.target.value as typeof scale);
+                setPage(0);
+              }}
+            >
+              <option value="house">House-scale $75k–$750k</option>
+              <option value="commercial">Commercial / $750k+</option>
+              <option value="all">All assessments</option>
+            </select>
+          </div>
+          <div className="field">
             <label className="field-label">Max eff. LTV</label>
             <input
               type="number"
@@ -176,11 +193,14 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
 
         <div className="table-tools" style={{ margin: "12px 0" }}>
           <span className="owner">{filtered.length.toLocaleString()} certificates after gates</span>
-          <button className="chip" onClick={() => { setVerdict("ACCUMULATE"); setSitus("situs"); setMaxLtv(0.15); setPage(0); }}>
+          <button className="chip" onClick={() => { setVerdict("ACCUMULATE"); setSitus("situs"); setScale("house"); setMaxLtv(0.15); setMaxFace(15000); setPage(0); }}>
             Conservative book
           </button>
-          <button className="chip" onClick={() => { setVerdict("all"); setSitus("situs"); setMaxLtv(0.2); setPage(0); }}>
+          <button className="chip" onClick={() => { setVerdict("all"); setSitus("situs"); setScale("house"); setMaxLtv(0.2); setMaxFace(25000); setPage(0); }}>
             Institutional 20%
+          </button>
+          <button className="chip" onClick={() => { setVerdict("all"); setSitus("all"); setScale("commercial"); setMaxLtv(0.2); setMaxFace(500000); setPage(0); }}>
+            Commercial takeout
           </button>
           <button className="btn" onClick={exportCsv}>Export CSV</button>
         </div>

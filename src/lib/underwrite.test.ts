@@ -60,6 +60,22 @@ describe("underwrite", () => {
     assert.ok(uw.flags.some((f) => f.id === "exempt-owner"));
   });
 
+  it("does not accumulate commercial-scale jumbo tickets", () => {
+    const uw = underwrite(
+      sample({
+        owner: "309-311 OWNER LLC",
+        amountDue: 116797.88,
+        assessedValue: 7314100,
+        address: "309 INTERNATIONAL CIR",
+        acres: 6,
+        description: "6.0 AC",
+      }),
+      DEFAULT_ASSUMPTIONS,
+    );
+    assert.notEqual(uw.verdict, "ACCUMULATE");
+    assert.ok(uw.flags.some((f) => f.id === "commercial-scale"));
+  });
+
   it("dilutes yield when a high-bid premium is posted", () => {
     const base = underwrite(sample({ amountDue: 8000, assessedValue: 200000 }), {
       ...DEFAULT_ASSUMPTIONS,
