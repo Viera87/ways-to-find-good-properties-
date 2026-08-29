@@ -41,10 +41,7 @@ export function parseAdvertisingFile(text: string, countyId: string): Lien[] {
   for (const row of parseDelimited(text)) {
     const district = pick(row, ["District", "Dist", "Ward"]);
     const parcel = pick(row, ["Parcel", "Account", "Account Number", "Acct", "Tax Account"]);
-    if (!district || !parcel || !/^\d+$/.test(district.replace(/^0+/, "") || district)) {
-      if (!parcel) continue;
-    }
-    if (!/^\d+$/.test(parcel.replace(/-/g, ""))) continue;
+    if (!/^\d+$/.test(district) || !/^\d+$/.test(parcel.replace(/-/g, ""))) continue;
     const amount = money(pick(row, ["Amount Due", "Taxes Due", "Amount", "Lien Amount", "Face"]));
     const assessed = money(pick(row, ["Assessed Value", "Assessment", "Assessed", "SDAT Value"]));
     if (amount == null || assessed == null) continue;
