@@ -11,6 +11,10 @@ Tax certificates are non-standard, illiquid, and local. This desk ranks every ad
 
 The advertising list is bundled. Change the underwriting sliders and the entire 2,601-certificate book re-ranks in the browser.
 
+Sale years are separated. The year chips switch the DAT calendar and the advertising book for **2026 / 2025 / 2024 / 2023** so a new import does not overwrite another year.
+
+The **Counties** tab lists all 24 Maryland collectors with that year’s DAT dates and official portals. There is no statewide registration and no public live-listing API — import a county advertising TSV/CSV when they publish it.
+
 **Accumulate** is reserved for house-scale collateral ($75k–$750k assessed, face ≤ $15k, score ≥ 90). Office parks and jumbo tickets can still be opened via the commercial-takeout preset — they are not treated as the default “best buy.”
 
 ## Run

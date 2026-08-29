@@ -6,9 +6,10 @@ export function Methodology() {
       <p className="section-kicker">Underwriting protocol</p>
       <h2>Institutional screen for non-standard, illiquid tax certificates</h2>
       <p>
-        Tax liens are local statutory instruments, not homogenized credit. CERTUS ranks the
-        Baltimore County {SALE.saleDate} advertising list with a four-phase gate: collateral
-        utility, surviving encumbrances, fully burdened LTV, and net redemption yield.
+        Tax liens are local statutory instruments, not homogenized credit. CERTUS ranks each
+        sale year on its own book. The Baltimore County {SALE.saleDate} advertising list is the
+        2026 starter file; switch years to see that DAT calendar and any list you imported for
+        2025, 2024, or 2023.
       </p>
 
       <section className="detail-card">

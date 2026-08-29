@@ -455,6 +455,40 @@ th .hint,
   gap: 16px;
 }
 
+.year-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.year-bar button {
+  display: grid;
+  gap: 2px;
+  min-width: 76px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.year-bar button small {
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+}
+
+.year-bar button.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #1a1406;
+}
+
+.year-bar button.active small {
+  color: #5a4718;
+}
+
 .counties {
   display: grid;
   gap: 16px;

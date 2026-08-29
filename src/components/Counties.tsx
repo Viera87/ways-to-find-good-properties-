@@ -1,33 +1,40 @@
 import { useMemo, useRef, useState } from "react";
-import type { Lien } from "../types";
-import { DAT_OMBUDSMAN, DAT_SCHEDULE, MARYLAND_SALES, saleStatus } from "../lib/counties";
+import type { Lien, LienBook } from "../types";
+import {
+  DAT_OMBUDSMAN,
+  DAT_SCHEDULE,
+  MARYLAND_SALES,
+  type SaleYear,
+  saleStatus,
+  statusLabel,
+} from "../lib/counties";
 import { parseAdvertisingFile } from "../lib/parseAdvertising";
 
 type Props = {
+  year: SaleYear;
+  books: LienBook[];
   activeCounty: string;
-  lienCount: number;
-  onImport: (countyId: string, countyName: string, liens: Lien[], fileName: string) => void;
+  onImport: (year: SaleYear, countyId: string, countyName: string, liens: Lien[], fileName: string) => void;
 };
 
-const STATUS_LABEL = {
-  held: "2026 sale held — leftover / OTC at the finance office",
-  window: "Inside the 45-day registration / sale window",
-  upcoming: "Upcoming — watch DAT for the confirmed date",
-};
-
-export function Counties({ activeCounty, lienCount, onImport }: Props) {
+export function Counties({ year, books, activeCounty, onImport }: Props) {
   const [q, setQ] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [importCounty, setImportCounty] = useState(activeCounty);
   const fileRef = useRef<HTMLInputElement>(null);
+  const yearBook = books.find((b) => b.year === year);
 
   const rows = useMemo(() => {
     const query = q.trim().toLowerCase();
     return MARYLAND_SALES.filter((c) => {
       if (!query) return true;
       return `${c.name} ${c.portalName} ${c.typicalWindow}`.toLowerCase().includes(query);
-    }).sort((a, b) => a.datSort.localeCompare(b.datSort));
-  }, [q]);
+    }).sort((a, b) => {
+      const as = a.dates[year].sort ?? "9999";
+      const bs = b.dates[year].sort ?? "9999";
+      return as.localeCompare(bs);
+    });
+  }, [q, year]);
 
   const loadFile = async (file: File) => {
     setError(null);
@@ -38,42 +45,34 @@ export function Counties({ activeCounty, lienCount, onImport }: Props) {
       setError("No parcel rows found. Use a tab- or comma-separated advertising list with Amount Due and Assessed Value columns.");
       return;
     }
-    onImport(county.id, county.name, liens, file.name);
+    onImport(year, county.id, county.name, liens, file.name);
   };
 
   return (
     <div className="counties">
       <section className="detail-card">
-        <p className="section-kicker">Maryland · 24 collectors</p>
-        <h2 className="address" style={{ fontSize: 26 }}>There is no statewide feed — and no statewide registration</h2>
+        <p className="section-kicker">Maryland · 24 collectors · {year}</p>
+        <h2 className="address" style={{ fontSize: 26 }}>One year at a time</h2>
         <p className="owner">
-          Auction vendors (RealAuction, county portals) do not publish a public listing API. CERTUS cannot
-          pull live bid sheets from behind those logins. What it can do: track every collector on the DAT
-          calendar, open the official portal, and underwrite an advertising file the moment you download it.
+          Use the sale-year chips above to separate calendars and advertising books. {year} DAT dates
+          are shown below. Importing a list stores it under <strong>{year}</strong> and leaves other
+          years untouched — so a 2025 Prince George’s file will not overwrite the 2026 Baltimore County book.
         </p>
         <p className="owner">
-          <strong>Do you have to apply in each county?</strong> Yes. Maryland has no umbrella bidder
-          registration. A RealAuction master login is not enough — you still register for that county’s
-          sale, pay that county’s $100–$150 fee (and any deposit), submit a W-9, set ACH, and sign that
-          collector’s terms. Windows typically open 30–45 days before the sale and close 1–2 weeks prior.
-          Miss one deadline and a neighboring county’s approval does not carry over.
-        </p>
-        <p className="owner">
-          Unsold certificates often sit <strong>over-the-counter</strong> at the finance office after the
-          annual auction. DAT keeps the official date list as collectors confirm:
+          There is still no statewide feed or umbrella registration. Official tracker:
           {" "}
-          <a href={DAT_SCHEDULE} target="_blank" rel="noreferrer">2026 tax sale schedule</a>
+          <a href={DAT_SCHEDULE} target="_blank" rel="noreferrer">DAT tax sale schedule</a>
           {" · "}
           <a href={DAT_OMBUDSMAN} target="_blank" rel="noreferrer">Tax Sale Ombudsman</a>
         </p>
       </section>
 
       <section className="detail-card">
-        <p className="section-kicker">Load a county advertising list</p>
+        <p className="section-kicker">Load a {year} advertising list</p>
         <p className="owner">
-          Baltimore County’s 2026 advertising file is already on the Pipeline ({lienCount.toLocaleString()} names
-          {activeCounty ? ` · ${activeCounty}` : ""}). For any other collector, download their published list
-          (or the registered-bidder spreadsheet) and drop it here.
+          {yearBook
+            ? `${yearBook.countyName} is loaded for ${year} (${yearBook.liens.length.toLocaleString()} names · ${yearBook.source}). Importing again replaces only this year.`
+            : `No advertising book for ${year} yet. Download that year’s list from the county portal and import it here.`}
         </p>
         <div className="import-row">
           <select value={importCounty} onChange={(e) => setImportCounty(e.target.value)}>
@@ -82,7 +81,7 @@ export function Counties({ activeCounty, lienCount, onImport }: Props) {
             ))}
           </select>
           <button className="btn primary" type="button" onClick={() => fileRef.current?.click()}>
-            Import TSV / CSV
+            Import {year} TSV / CSV
           </button>
           <input
             ref={fileRef}
@@ -106,7 +105,7 @@ export function Counties({ activeCounty, lienCount, onImport }: Props) {
           onChange={(e) => setQ(e.target.value)}
           style={{ maxWidth: 280 }}
         />
-        <span className="owner">{rows.length} jurisdictions · DAT dates are the official tracker</span>
+        <span className="owner">{rows.length} jurisdictions · DAT {year}</span>
       </div>
 
       <div className="table-wrap">
@@ -114,7 +113,7 @@ export function Counties({ activeCounty, lienCount, onImport }: Props) {
           <thead>
             <tr>
               <th>County</th>
-              <th>DAT 2026 date</th>
+              <th>DAT {year} date</th>
               <th>Typical window</th>
               <th>Portal</th>
               <th>Register?</th>
@@ -123,20 +122,21 @@ export function Counties({ activeCounty, lienCount, onImport }: Props) {
           </thead>
           <tbody>
             {rows.map((c) => {
-              const status = saleStatus(c.datSort);
+              const stamp = c.dates[year];
+              const status = saleStatus(stamp.sort);
               return (
                 <tr key={c.id}>
                   <td>
                     {c.name}
                     <div className="owner">{c.vendor} · {c.feeNote}</div>
                   </td>
-                  <td className="mono">{c.datDate2026}</td>
+                  <td className="mono">{stamp.label}</td>
                   <td>{c.typicalWindow}</td>
                   <td>
                     <a href={c.portalUrl} target="_blank" rel="noreferrer">{c.portalName}</a>
                   </td>
                   <td>Separate application</td>
-                  <td><span className={`status-pill ${status}`}>{STATUS_LABEL[status]}</span></td>
+                  <td><span className={`status-pill ${status}`}>{statusLabel(status, year)}</span></td>
                 </tr>
               );
             })}

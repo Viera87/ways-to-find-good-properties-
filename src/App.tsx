@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import rawLiens from "./data/liens.json";
-import type { Assumptions, Lien } from "./types";
+import type { Assumptions, Lien, LienBook } from "./types";
 import { AssumptionsBar } from "./components/AssumptionsBar";
 import { Allocator } from "./components/Allocator";
 import { Counties } from "./components/Counties";
 import { Methodology } from "./components/Methodology";
 import { Pipeline } from "./components/Pipeline";
+import { YearBar } from "./components/YearBar";
+import type { SaleYear } from "./lib/counties";
 import { DEFAULT_ASSUMPTIONS, rankedLiens } from "./lib/underwrite";
 import { money, percent } from "./lib/format";
 import { TERM_HELP } from "./lib/glossary";
@@ -13,20 +15,25 @@ import { Hint } from "./components/Hint";
 
 const bundled = rawLiens as Lien[];
 
+const STARTER_BOOK: LienBook = {
+  year: 2026,
+  countyId: "baltimore-county",
+  countyName: "Baltimore County, Maryland",
+  source: "2026 advertising file",
+  liens: bundled,
+};
+
 type View = "pipeline" | "allocator" | "counties" | "method";
 
 export function App() {
   const [view, setView] = useState<View>("pipeline");
   const [assumptions, setAssumptions] = useState<Assumptions>(DEFAULT_ASSUMPTIONS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [book, setBook] = useState({
-    countyId: "baltimore-county",
-    countyName: "Baltimore County, Maryland",
-    source: "2026 advertising file",
-    liens: bundled,
-  });
+  const [activeYear, setActiveYear] = useState<SaleYear>(2026);
+  const [books, setBooks] = useState<LienBook[]>([STARTER_BOOK]);
 
-  const liens = book.liens;
+  const book = books.find((b) => b.year === activeYear);
+  const liens = book?.liens ?? [];
   const ranked = useMemo(() => rankedLiens(liens, assumptions), [liens, assumptions]);
   const accumulate = ranked.filter((r) => r.uw.verdict === "ACCUMULATE");
   const underwriteable = ranked.filter((r) => r.uw.verdict === "ACCUMULATE" || r.uw.verdict === "UNDERWRITE");
@@ -55,13 +62,21 @@ export function App() {
           </button>
         </nav>
         <div className="sale-meta">
-          {book.countyName}
+          {activeYear} · {book?.countyName ?? "No book loaded"}
           <br />
-          {book.source} · {liens.length.toLocaleString()} names
+          {book ? `${book.source} · ${liens.length.toLocaleString()} names` : "Import a list on Counties"}
         </div>
       </header>
 
       <main className="page">
+        <YearBar
+          year={activeYear}
+          counts={Object.fromEntries(books.map((b) => [b.year, b.liens.length]))}
+          onChange={(year) => {
+            setActiveYear(year);
+            setSelectedId(null);
+          }}
+        />
         <section className="kpis">
           <article className="kpi">
             <div className="kpi-label"><Hint entry={TERM_HELP.universe}>Universe</Hint></div>
@@ -91,7 +106,20 @@ export function App() {
 
         <AssumptionsBar value={assumptions} onChange={setAssumptions} />
 
-        {view === "pipeline" ? (
+        {view === "pipeline" && liens.length === 0 ? (
+          <section className="detail-card">
+            <p className="section-kicker">{activeYear} book</p>
+            <h2 className="address" style={{ fontSize: 24 }}>No advertising list for {activeYear}</h2>
+            <p className="owner">
+              This year is kept separate from the other sale years. Open Counties, pick the collector,
+              and import that year’s TSV/CSV. The {books.find((b) => b.year === 2026) ? "2026 Baltimore County" : "other"} book stays put.
+            </p>
+            <button className="btn primary" type="button" onClick={() => setView("counties")}>
+              Go to {activeYear} counties
+            </button>
+          </section>
+        ) : null}
+        {view === "pipeline" && liens.length > 0 ? (
           <Pipeline
             rows={ranked}
             assumptions={assumptions}
@@ -111,10 +139,15 @@ export function App() {
         ) : null}
         {view === "counties" ? (
           <Counties
-            activeCounty={book.countyId}
-            lienCount={liens.length}
-            onImport={(countyId, countyName, next, fileName) => {
-              setBook({ countyId, countyName, source: fileName, liens: next });
+            year={activeYear}
+            books={books}
+            activeCounty={book?.countyId ?? "baltimore-county"}
+            onImport={(year, countyId, countyName, next, fileName) => {
+              setBooks((prev) => {
+                const incoming: LienBook = { year, countyId, countyName, source: fileName, liens: next };
+                return [...prev.filter((b) => b.year !== year), incoming];
+              });
+              setActiveYear(year);
               setSelectedId(null);
               setView("pipeline");
             }}

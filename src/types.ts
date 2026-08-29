@@ -1,3 +1,11 @@
+export type LienBook = {
+  year: number;
+  countyId: string;
+  countyName: string;
+  source: string;
+  liens: Lien[];
+};
+
 export type Lien = {
   id: string;
   district: string;

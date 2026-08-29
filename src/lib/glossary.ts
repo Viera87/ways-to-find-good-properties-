@@ -117,6 +117,10 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
     title: "Modeled overbid",
     body: "Extra dollars above taxes due, used to stress high-bid premium and takeout cost. Surplus bid stays on credit until judgment; only HBP and taxes leave on sale day.",
   },
+  saleYear: {
+    title: "Sale year",
+    body: "Each Maryland collector runs one annual sale. Switch years to see that DAT calendar and the advertising book you imported for that year. 2026 Baltimore County is loaded; 2025–2023 stay empty until you import those lists.",
+  },
   counties: {
     title: "Counties",
     body: "Maryland’s 24 collectors each run their own sale. There is no statewide registration or live listing API. Open the official portal, register separately, then import that county’s advertising file.",
