@@ -132,6 +132,7 @@ export function App() {
         ) : null}
         {view === "pipeline" && liens.length > 0 ? (
           <Pipeline
+            key={`${activeYear}-${book?.source ?? "empty"}`}
             rows={ranked}
             assumptions={assumptions}
             selectedId={selectedId}
