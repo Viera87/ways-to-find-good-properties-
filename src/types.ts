@@ -6,6 +6,16 @@ export type LienBook = {
   liens: Lien[];
 };
 
+export type SaleResult = {
+  winningBid: number;
+  hbp: number;
+  totalDue: number;
+  bidderId: string;
+  bidderName: string;
+  bidderAddress: string;
+  bidToValue: number;
+};
+
 export type Lien = {
   id: string;
   district: string;
@@ -22,6 +32,7 @@ export type Lien = {
   acres: number | null;
   sqft: number | null;
   hasSitus: boolean;
+  saleResult?: SaleResult;
 };
 
 export type Assumptions = {

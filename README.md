@@ -11,7 +11,7 @@ Tax certificates are non-standard, illiquid, and local. This desk ranks every ad
 
 The advertising list is bundled. Change the underwriting sliders and the entire 2,601-certificate book re-ranks in the browser.
 
-Sale years are separated. The year chips switch the DAT calendar and the advertising book for **2026 / 2025 / 2024 / 2023** so a new import does not overwrite another year.
+Sale years are separated. **2026** is the advertising list to underwrite. **2025** is the Baltimore County August 28 winner file (actual bids, high-bid premiums, bidder book). 2024 and 2023 stay empty until you import those lists.
 
 The **Counties** tab lists all 24 Maryland collectors with that year’s DAT dates and official portals. There is no statewide registration and no public live-listing API — import a county advertising TSV/CSV when they publish it.
 

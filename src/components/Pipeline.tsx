@@ -21,10 +21,11 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
   const [q, setQ] = useState("");
   const [district, setDistrict] = useState("all");
   const [verdict, setVerdict] = useState<"all" | Verdict>("all");
+  const hasResults = rows.some((r) => r.lien.saleResult);
   const [situs, setSitus] = useState<"all" | "situs" | "vacant">("all");
-  const [scale, setScale] = useState<"all" | "house" | "commercial">("house");
+  const [scale, setScale] = useState<"all" | "house" | "commercial">(hasResults ? "all" : "house");
   const [maxLtv, setMaxLtv] = useState(0.2);
-  const [maxFace, setMaxFace] = useState(25000);
+  const [maxFace, setMaxFace] = useState(hasResults ? 500000 : 25000);
   const [page, setPage] = useState(0);
 
   const districts = useMemo(
@@ -44,7 +45,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       if (uw.effectiveLtv > maxLtv) return false;
       if (lien.amountDue > maxFace) return false;
       if (query) {
-        const blob = `${lien.address} ${lien.owner} ${lien.owner2} ${lien.parcel} ${lien.description}`.toLowerCase();
+        const blob = `${lien.address} ${lien.owner} ${lien.owner2} ${lien.parcel} ${lien.description} ${lien.saleResult?.bidderName ?? ""} ${lien.saleResult?.bidderId ?? ""}`.toLowerCase();
         if (!blob.includes(query)) return false;
       }
       return true;
@@ -221,6 +222,8 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
                 <th><Hint entry={TERM_HELP.assessed}>Assessed</Hint></th>
                 <th><Hint entry={TERM_HELP.ltv}>Eff. LTV</Hint></th>
                 <th><Hint entry={TERM_HELP.yield}>Net yield</Hint></th>
+                {hasResults ? <th><Hint entry={TERM_HELP.winningBid}>Winning bid</Hint></th> : null}
+                {hasResults ? <th><Hint entry={TERM_HELP.hbp}>HBP</Hint></th> : null}
                 <th><Hint entry={TERM_HELP.flags}>Flags</Hint></th>
               </tr>
             </thead>
@@ -241,6 +244,12 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
                   <td className="mono">{money(lien.assessedValue)}</td>
                   <td className="mono">{percent(uw.effectiveLtv)}</td>
                   <td className="mono">{percent(uw.netAnnualizedYield)}</td>
+                  {hasResults ? (
+                    <td className="mono">{lien.saleResult ? money(lien.saleResult.winningBid) : "—"}</td>
+                  ) : null}
+                  {hasResults ? (
+                    <td className="mono">{lien.saleResult ? money(lien.saleResult.hbp) : "—"}</td>
+                  ) : null}
                   <td>{uw.flags.filter((f) => f.severity !== "info").length}</td>
                 </tr>
               ))}

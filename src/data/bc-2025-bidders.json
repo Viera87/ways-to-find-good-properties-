@@ -1,0 +1,140 @@
+{
+  "saleDate": "August 28, 2025",
+  "county": "Baltimore County",
+  "published": "September 17, 2025",
+  "bidders": [
+    {
+      "id": "1500",
+      "name": "Bruce Arnold LLC",
+      "address": "2704 Bourne Way, Edgewood, MD"
+    },
+    {
+      "id": "1502",
+      "name": "Tax Auction of East Coast, LLC",
+      "address": "PO Box 21, Brooklandville, MD"
+    },
+    {
+      "id": "1505",
+      "name": "Greymorr MD LLC",
+      "address": "9 Newburg Ave, Ste 201, Catonsville, MD"
+    },
+    {
+      "id": "1506",
+      "name": "Off Tilt Holdings, LLC",
+      "address": "2405 York Rd, Suite 201, Lutherville Timonium, MD"
+    },
+    {
+      "id": "1507",
+      "name": "WSFS Custodian for FDTL Fund 1 LLC fbo Firstrust",
+      "address": "7 St Paul Street, Baltimore, MD"
+    },
+    {
+      "id": "1513",
+      "name": "THE TAX LIEN HEDGE, LIMITED LIABILITY COMPANY",
+      "address": "584 Bellerive Rd Unit 3C, Annapolis, MD"
+    },
+    {
+      "id": "1516",
+      "name": "PLAINVIEW FINANCIAL SERVICES, LTD",
+      "address": "14103 Woodens Lane, Reisterstown, MD"
+    },
+    {
+      "id": "1529",
+      "name": "RTLF-MD II, LLC",
+      "address": "11426 York Rd Fl 1, Cockeysville, MD"
+    },
+    {
+      "id": "1530",
+      "name": "Sunshine Ventures, LLC",
+      "address": "5113 Willet Bridge Rd, Bethesda, MD"
+    },
+    {
+      "id": "1535",
+      "name": "Weeping Cherry, LLC",
+      "address": "1190 W. Northern Parkway, Baltimore, MD"
+    },
+    {
+      "id": "1538",
+      "name": "Redeemed Homes, LLC",
+      "address": "14103 Woodens Lane, Baltimore, MD"
+    },
+    {
+      "id": "1540",
+      "name": "Benkirane, Saad",
+      "address": "2701 12th St S, Arlington, VA"
+    },
+    {
+      "id": "1547",
+      "name": "Imtiaz, Fareez",
+      "address": "1409 Harberson Rd, Catonsville, MD"
+    },
+    {
+      "id": "1549",
+      "name": "Steininger, Mathew",
+      "address": "16 Cedar Farm Ln, Rising Sun, MD"
+    },
+    {
+      "id": "1550",
+      "name": "Farmhands, LLC",
+      "address": "9 Newburg Ave, Catonsville, MD"
+    },
+    {
+      "id": "1557",
+      "name": "Wilbarger LLC",
+      "address": "1777 Reisterstown Rd, Baltimore, MD"
+    },
+    {
+      "id": "1560",
+      "name": "Oppidan Investments, LLC",
+      "address": "124 South Street, Annapolis, MD"
+    },
+    {
+      "id": "1562",
+      "name": "Columbia Liens LLC",
+      "address": "5000 Thayer Center, Oakland, MD"
+    },
+    {
+      "id": "1566",
+      "name": "Steininger, Michael",
+      "address": "6101 Plainview Rd, Bethesda, MD"
+    },
+    {
+      "id": "1568",
+      "name": "ATCF II Maryland LLC",
+      "address": "20 E Timonium Road, Timonium, MD"
+    },
+    {
+      "id": "1578",
+      "name": "Effect Inc",
+      "address": "2357 Bell Branch Rd, Gambrills, MD"
+    },
+    {
+      "id": "1580",
+      "name": "FNA DZ, LLC",
+      "address": "P.O. Box 291, Jarrettsville, MD"
+    },
+    {
+      "id": "1586",
+      "name": "Brook-Lyn CORP, LLC",
+      "address": "1519 York Road, Lutherville, MD"
+    },
+    {
+      "id": "1593",
+      "name": "Maric Care Services",
+      "address": "6812 Maryland Ave., Braddock Heights, MD"
+    },
+    {
+      "id": "9999",
+      "name": "Baltimore County (unsold / struck to collector)",
+      "address": "Baltimore County (struck to collector)"
+    }
+  ],
+  "totals": {
+    "certificates": 1159,
+    "face": 7553523.51,
+    "bids": 218990172.79,
+    "hbp": 14759287.74,
+    "auctionCash": 22312811.25,
+    "assessed": 365621100.0
+  }
+}

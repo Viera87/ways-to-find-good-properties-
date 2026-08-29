@@ -7,9 +7,9 @@ export function Methodology() {
       <h2>Institutional screen for non-standard, illiquid tax certificates</h2>
       <p>
         Tax liens are local statutory instruments, not homogenized credit. CERTUS ranks each
-        sale year on its own book. The Baltimore County {SALE.saleDate} advertising list is the
-        2026 starter file; switch years to see that DAT calendar and any list you imported for
-        2025, 2024, or 2023.
+        sale year on its own book. 2026 is the current advertising list; 2025 is the August 28
+        Baltimore County winner file (bids, HBP, bidder numbers) so you can see what actually
+        cleared before you bid this year.
       </p>
 
       <section className="detail-card">

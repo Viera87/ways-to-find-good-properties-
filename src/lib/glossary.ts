@@ -117,6 +117,10 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
     title: "Modeled overbid",
     body: "Extra dollars above taxes due, used to stress high-bid premium and takeout cost. Surplus bid stays on credit until judgment; only HBP and taxes leave on sale day.",
   },
+  winningBid: {
+    title: "Winning bid",
+    body: "Price the 2025 winner posted, not just taxes due. In Maryland the surplus stays on credit until foreclosure judgment; sale-day ACH is still taxes due plus HBP. Bids often run 40–70% of assessed value and trigger a large zero-interest premium.",
+  },
   saleYear: {
     title: "Sale year",
     body: "Each Maryland collector runs one annual sale. Switch years to see that DAT calendar and the advertising book you imported for that year. 2026 Baltimore County is loaded; 2025–2023 stay empty until you import those lists.",

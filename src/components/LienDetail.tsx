@@ -66,6 +66,34 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
         <VerdictChip verdict={uw.verdict} />
       </div>
 
+      {lien.saleResult ? (
+        <section className="phase" style={{ marginTop: 12 }}>
+          <h3>2025 auction result</h3>
+          <p className="owner">
+            {lien.saleResult.bidderName} (#{lien.saleResult.bidderId})
+            {lien.saleResult.bidderAddress ? ` · ${lien.saleResult.bidderAddress}` : ""}
+          </p>
+          <div className="metrics">
+            <div className="metric">
+              <div className="field-label"><Hint entry={TERM_HELP.winningBid}>Winning bid</Hint></div>
+              <div className="metric-value">{moneyExact(lien.saleResult.winningBid)}</div>
+            </div>
+            <div className="metric">
+              <div className="field-label"><Hint entry={TERM_HELP.hbp}>HBP actually posted</Hint></div>
+              <div className="metric-value">{moneyExact(lien.saleResult.hbp)}</div>
+            </div>
+            <div className="metric">
+              <div className="field-label">Sale-day cash</div>
+              <div className="metric-value">{moneyExact(lien.saleResult.totalDue)}</div>
+            </div>
+            <div className="metric">
+              <div className="field-label">Bid / assessed</div>
+              <div className="metric-value">{percentExact(lien.saleResult.bidToValue)}</div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <div className="metrics">
         <div className="metric">
           <div className="field-label"><Hint entry={TERM_HELP.face}>Face / taxes due</Hint></div>

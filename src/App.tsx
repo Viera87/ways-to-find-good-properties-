@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import rawLiens from "./data/liens.json";
+import results2025 from "./data/bc-2025-results.json";
 import type { Assumptions, Lien, LienBook } from "./types";
 import { AssumptionsBar } from "./components/AssumptionsBar";
 import { Allocator } from "./components/Allocator";
 import { Counties } from "./components/Counties";
 import { Methodology } from "./components/Methodology";
 import { Pipeline } from "./components/Pipeline";
+import { ResultsRecap } from "./components/ResultsRecap";
 import { YearBar } from "./components/YearBar";
 import type { SaleYear } from "./lib/counties";
 import { DEFAULT_ASSUMPTIONS, rankedLiens } from "./lib/underwrite";
@@ -23,6 +25,14 @@ const STARTER_BOOK: LienBook = {
   liens: bundled,
 };
 
+const BOOK_2025: LienBook = {
+  year: 2025,
+  countyId: "baltimore-county",
+  countyName: "Baltimore County, Maryland",
+  source: "2025 winner detail · sale August 28",
+  liens: results2025 as Lien[],
+};
+
 type View = "pipeline" | "allocator" | "counties" | "method";
 
 export function App() {
@@ -30,7 +40,7 @@ export function App() {
   const [assumptions, setAssumptions] = useState<Assumptions>(DEFAULT_ASSUMPTIONS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeYear, setActiveYear] = useState<SaleYear>(2026);
-  const [books, setBooks] = useState<LienBook[]>([STARTER_BOOK]);
+  const [books, setBooks] = useState<LienBook[]>([STARTER_BOOK, BOOK_2025]);
 
   const book = books.find((b) => b.year === activeYear);
   const liens = book?.liens ?? [];
@@ -105,6 +115,7 @@ export function App() {
         </section>
 
         <AssumptionsBar value={assumptions} onChange={setAssumptions} />
+        {view === "pipeline" ? <ResultsRecap liens={liens} /> : null}
 
         {view === "pipeline" && liens.length === 0 ? (
           <section className="detail-card">
