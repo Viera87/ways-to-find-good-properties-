@@ -2,14 +2,26 @@
   "name": "certus-tax-lien-desk",
   "private": true,
   "version": "1.0.0",
+  "description": "Self-hosted Maryland tax lien underwriting desk",
+  "author": "CERTUS",
   "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 4173",
-    "test": "tsx --test src/lib/*.test.ts"
+    "test": "tsx --test src/lib/*.test.ts",
+    "icons": "node scripts/make-icon.mjs",
+    "desktop": "npm run build && electron .",
+    "desktop:dist": "npm run build && electron-builder --publish never",
+    "desktop:win": "npm run build && electron-builder --win portable nsis --publish never",
+    "desktop:mac": "npm run build && electron-builder --mac dmg --publish never",
+    "desktop:linux": "npm run build && electron-builder --linux AppImage dir --publish never"
   },
   "dependencies": {
+    "@fontsource/fraunces": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.6",
+    "@fontsource/ibm-plex-sans": "^5.2.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
@@ -17,8 +29,49 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vite": "^7.0.6"
+  },
+  "build": {
+    "appId": "com.certus.lien-desk",
+    "productName": "CERTUS",
+    "copyright": "Self-hosted underwriting desk",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "asar": true,
+    "icon": "build/icon.png",
+    "linux": {
+      "target": ["AppImage", "dir"],
+      "category": "Office",
+      "icon": "build/icons",
+      "artifactName": "CERTUS-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "target": ["portable", "nsis"],
+      "icon": "build/icon.png",
+      "artifactName": "CERTUS-${version}-setup.${ext}"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "build/icon.png",
+      "category": "public.app-category.finance",
+      "artifactName": "CERTUS-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "shortcutName": "CERTUS"
+    },
+    "portable": {
+      "artifactName": "CERTUS-portable.exe"
+    }
   }
 }

@@ -17,12 +17,41 @@ The **Counties** tab lists all 24 Maryland collectors with that year’s DAT dat
 
 **Accumulate** is reserved for house-scale collateral ($75k–$750k assessed, face ≤ $15k, score ≥ 90). Office parks and jumbo tickets can still be opened via the commercial-takeout preset — they are not treated as the default “best buy.”
 
-## Run
+## Desktop app (click to open, self-hosted)
+
+CERTUS is a local Electron app. The underwriting book lives on your machine. Nothing is uploaded.
+
+### Fastest: double-click the launcher
+
+1. Download or clone this folder onto the computer you will underwrite from.
+2. Put a shortcut to the launcher on your desktop:
+   - **Windows:** `Open-CERTUS.bat`
+   - **macOS:** `Open-CERTUS.command` (first time: right-click → Open)
+   - **Linux:** `Open-CERTUS.sh`
+3. Double-click it. The first run installs Node packages, then a **CERTUS** window opens by itself. Later clicks just open the window.
+
+You need [Node.js 20+](https://nodejs.org) installed once. After that it is a normal desktop app — no browser tab, no server to keep running.
+
+### Packaged installer (no Node after you build it)
+
+On the same kind of computer you will use (Windows for a `.exe`, Mac for a `.dmg`):
 
 ```bash
 npm install
-npm run dev
+npm run desktop:dist
 ```
+
+Copy the file from `release/` onto your desktop and open it:
+
+- Windows: `CERTUS-portable.exe` (double-click, no install) or the NSIS setup
+- macOS: `CERTUS-*.dmg`
+- Linux: `CERTUS-*.AppImage` or `linux-unpacked/CERTUS`
+
+GitHub Actions also builds those three packages on every push (`Desktop app` workflow). Download **CERTUS-windows**, **CERTUS-macos**, or **CERTUS-linux** from the Actions tab.
+
+County GIS, PACER, and auction portals still need internet. The certificate book, scoring, and allocator do not.
+
+Browser mode is still available: `npm run dev` or `npm run preview` after a build.
 
 ```bash
 npm test

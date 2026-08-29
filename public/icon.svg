@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#0b0f14"/>
+  <rect x="10" y="10" width="108" height="108" rx="18" fill="#161d27" stroke="#d4b15a" stroke-width="3"/>
+  <text x="64" y="78" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#d4b15a" letter-spacing="4">CERTUS</text>
+</svg>
