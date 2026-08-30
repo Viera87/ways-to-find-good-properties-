@@ -91,8 +91,14 @@ type JsonFetch = (url: string, init?: RequestInit) => Promise<unknown>;
 
 async function defaultFetchJson(url: string, init?: RequestInit): Promise<unknown> {
   const native = typeof window !== "undefined" ? window.certusNative?.fetchJson : undefined;
-  if (native) return native(url);
-  const res = await fetch(url, init);
+  if (native) {
+    try {
+      return await native(url);
+    } catch {
+      // Stale desktop bridge or browser with a leftover preload — use HTTPS fetch.
+    }
+  }
+  const res = await fetch(url, { ...init, headers: { Accept: "application/json", ...(init?.headers ?? {}) } });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }

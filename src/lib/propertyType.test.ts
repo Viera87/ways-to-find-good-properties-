@@ -31,6 +31,10 @@ describe("classifyProperty", () => {
     assert.equal(classifyProperty(sample({ description: "UNIT 4 PHASE 2" })).kind, "condo");
   });
 
+  it("does not treat a subdivision PHASE letter as a condo", () => {
+    assert.equal(classifyProperty(sample({ description: "0.105 AC  PHASE D", acres: 0.105 })).kind, "house");
+  });
+
   it("labels missing street numbers as vacant", () => {
     assert.equal(classifyProperty(sample({ hasSitus: false, streetNumber: "", address: "DANIELS AVE" })).kind, "vacant");
   });
