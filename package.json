@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Self-hosted Maryland tax lien underwriting desk",
   "author": "CERTUS",
+  "desktopName": "CERTUS",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -53,7 +54,7 @@
       "category": "Office",
       "icon": "build/icons",
       "executableName": "CERTUS",
-      "desktopName": "CERTUS",
+      "syncDesktopName": true,
       "artifactName": "CERTUS-${version}-${arch}.${ext}"
     },
     "win": {
