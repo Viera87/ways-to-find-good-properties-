@@ -83,4 +83,5 @@ export type Underwriting = {
     collateral: number;
     title: number;
   };
+  leftoverRisk: boolean;
 };

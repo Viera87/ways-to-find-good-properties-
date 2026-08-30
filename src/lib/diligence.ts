@@ -44,7 +44,7 @@ export function ownerBlob(lien: Lien): string {
 }
 
 export function isEntityOwner(lien: Lien): boolean {
-  return /\b(LLC|INC|INCORPORATED|CORP|LP|LLP|LTD|COMPANY|CO)\b/.test(ownerBlob(lien));
+  return /\b(LLC|INC|INCORPORATED|CORPORATION|CORP|LP|LLP|LTD|COMPANY|CO)\b/.test(ownerBlob(lien));
 }
 
 export function collectFlags(lien: Lien): DiligenceFlag[] {

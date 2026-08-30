@@ -129,6 +129,14 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
     title: "Counties",
     body: "Maryland’s 24 collectors each run their own sale. There is no statewide registration or live listing API. Open the official portal, register separately, then import that county’s advertising file.",
   },
+  leftover: {
+    title: "Leftover / OTC risk",
+    body: "Phase 0 screen for names that die on the auction floor and come back as county-owned OTC: no buildable situs, face above assessed value, entity strips, same-owner vacant clusters, or face already above 15% of AV. Do not spend GIS time on these before the sale.",
+  },
+  leftoverKpi: {
+    title: "OTC / leftover risk",
+    body: "Count of certificates that look like post-auction county leftovers. Hide them with the Pre-auction book chip. The floor already passed; they are adverse selection, not a sourcing channel.",
+  },
   propertyType: {
     title: "Property type",
     body: "Automated read of the advertising file only — situs, acreage, assessment, unit language, easement words, and owner name. It is not SDAT land use or a zoning letter. Filter the pipeline by type, then confirm the parcel in county GIS.",

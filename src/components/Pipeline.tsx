@@ -27,6 +27,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
   const [situs, setSitus] = useState<"all" | "situs" | "vacant">("all");
   const [scale, setScale] = useState<"all" | "house" | "commercial">(hasResults ? "all" : "house");
   const [kind, setKind] = useState<"all" | PropertyKind>("all");
+  const [leftover, setLeftover] = useState<"hide" | "all" | "only">(hasResults ? "all" : "hide");
   const [maxLtv, setMaxLtv] = useState(0.2);
   const [maxFace, setMaxFace] = useState(hasResults ? 500000 : 25000);
   const [page, setPage] = useState(0);
@@ -46,6 +47,8 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       if (scale === "house" && (lien.assessedValue < 75000 || lien.assessedValue > 750000)) return false;
       if (scale === "commercial" && lien.assessedValue < 750000) return false;
       if (kind !== "all" && classifyProperty(lien).kind !== kind) return false;
+      if (leftover === "hide" && uw.leftoverRisk) return false;
+      if (leftover === "only" && !uw.leftoverRisk) return false;
       if (uw.effectiveLtv > maxLtv) return false;
       if (lien.amountDue > maxFace) return false;
       if (query) {
@@ -54,7 +57,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       }
       return true;
     });
-  }, [rows, q, district, verdict, situs, scale, kind, maxLtv, maxFace]);
+  }, [rows, q, district, verdict, situs, scale, kind, leftover, maxLtv, maxFace]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE));
   const safePage = Math.min(page, pageCount - 1);
@@ -73,6 +76,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       "score",
       "verdict",
       "propertyType",
+      "leftoverRisk",
     ];
     const lines = [
       header.join(","),
@@ -88,6 +92,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
           uw.score,
           uw.verdict,
           classifyProperty(lien).kind,
+          uw.leftoverRisk ? "yes" : "no",
         ].join(","),
       ),
     ];
@@ -198,6 +203,22 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
             </select>
           </div>
           <div className="field">
+            <label className="field-label">
+              <Hint entry={TERM_HELP.leftover}>Leftover / OTC</Hint>
+            </label>
+            <select
+              value={leftover}
+              onChange={(e) => {
+                setLeftover(e.target.value as typeof leftover);
+                setPage(0);
+              }}
+            >
+              <option value="hide">Hide leftover risk</option>
+              <option value="all">Show all</option>
+              <option value="only">Leftover risk only</option>
+            </select>
+          </div>
+          <div className="field">
             <label className="field-label">Max eff. LTV</label>
             <input
               type="number"
@@ -224,14 +245,20 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
 
         <div className="table-tools" style={{ margin: "12px 0" }}>
           <span className="owner">{filtered.length.toLocaleString()} certificates after gates</span>
-          <button className="chip" onClick={() => { setVerdict("ACCUMULATE"); setSitus("situs"); setScale("house"); setMaxLtv(0.15); setMaxFace(15000); setPage(0); }}>
+          <button className="chip" onClick={() => { setVerdict("all"); setSitus("situs"); setScale("house"); setKind("house"); setLeftover("hide"); setMaxLtv(0.15); setMaxFace(15000); setPage(0); }}>
+            Pre-auction book
+          </button>
+          <button className="chip" onClick={() => { setVerdict("ACCUMULATE"); setSitus("situs"); setScale("house"); setKind("all"); setLeftover("hide"); setMaxLtv(0.15); setMaxFace(15000); setPage(0); }}>
             Conservative book
           </button>
-          <button className="chip" onClick={() => { setVerdict("all"); setSitus("situs"); setScale("house"); setMaxLtv(0.2); setMaxFace(25000); setPage(0); }}>
+          <button className="chip" onClick={() => { setVerdict("all"); setSitus("situs"); setScale("house"); setKind("all"); setLeftover("hide"); setMaxLtv(0.2); setMaxFace(25000); setPage(0); }}>
             Institutional 20%
           </button>
-          <button className="chip" onClick={() => { setVerdict("all"); setSitus("all"); setScale("commercial"); setMaxLtv(0.2); setMaxFace(500000); setPage(0); }}>
+          <button className="chip" onClick={() => { setVerdict("all"); setSitus("all"); setScale("commercial"); setKind("all"); setLeftover("all"); setMaxLtv(0.2); setMaxFace(500000); setPage(0); }}>
             Commercial takeout
+          </button>
+          <button className="chip" onClick={() => { setVerdict("all"); setSitus("all"); setScale("all"); setKind("all"); setLeftover("only"); setMaxLtv(1); setMaxFace(5_000_000); setPage(0); }}>
+            Show leftovers
           </button>
           <button className="btn" onClick={exportCsv}>Export CSV</button>
         </div>
@@ -261,7 +288,12 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
                   onClick={() => onSelect(lien.id)}
                 >
                   <td className="mono">{uw.score}</td>
-                  <td><VerdictChip verdict={uw.verdict} /></td>
+                  <td>
+                    <VerdictChip verdict={uw.verdict} />
+                    {uw.leftoverRisk ? (
+                      <div className="owner leftover-tag">Leftover / OTC</div>
+                    ) : null}
+                  </td>
                   <td>
                     {lien.address || "—"}
                     <div className="owner">{lien.id} · {acresLabel(lien.acres, lien.sqft)}</div>

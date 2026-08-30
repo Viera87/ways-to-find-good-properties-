@@ -18,11 +18,13 @@ export function allocateCapital(
   },
 ): { picks: AllocationRow[]; leftover: number; deployed: number } {
   const ranked = liens
-    .map((lien) => ({ lien, uw: underwrite(lien, assumptions) }))
+    .map((lien) => ({ lien, uw: underwrite(lien, assumptions, liens) }))
     .filter((row) => {
       if (row.uw.effectiveLtv > options.maxLtv) return false;
       if (options.requireSitus && !row.lien.hasSitus) return false;
       if (options.excludeHardFlags && row.uw.flags.some((f) => f.severity === "hard")) return false;
+      if (row.uw.leftoverRisk && row.uw.flags.some((f) => f.id.startsWith("leftover-") && f.severity === "hard"))
+        return false;
       if (row.uw.auctionDayCapital > options.maxPerCertificate) return false;
       if (row.uw.verdict === "DECLINE") return false;
       return true;

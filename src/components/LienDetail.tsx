@@ -71,6 +71,25 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
         <TypeChip kind={property.kind} />
       </div>
       <p className="owner" style={{ marginTop: 8 }}>{property.reason}</p>
+      {uw.leftoverRisk ? (
+        <section className="leftover-banner">
+          <h3><Hint entry={TERM_HELP.leftover}>Pre-auction leftover screen — do not research</Hint></h3>
+          <p className="owner">
+            This name matches the inventory that dies on the floor and returns as county OTC.
+            Same Phase 0 gates as a bid: no GIS/PACER time until the leftover flags are cleared
+            (they almost never are).
+          </p>
+          <div className="check-list">
+            {uw.flags.filter((f) => f.id.startsWith("leftover-")).map((flag) => (
+              <div key={flag.id}>
+                <span className={`flag ${flag.severity}`}>P{flag.phase} {flag.severity}</span>{" "}
+                <strong>{flag.title}</strong>
+                <div className="owner">{flag.detail}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {lien.saleResult ? (
         <section className="phase" style={{ marginTop: 12 }}>

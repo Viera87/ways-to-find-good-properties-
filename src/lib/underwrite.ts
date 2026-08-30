@@ -1,6 +1,7 @@
 import type { Assumptions, Lien, Underwriting, Verdict } from "../types";
 import { clamp } from "./format";
 import { collectFlags } from "./diligence";
+import { hasLeftoverRisk, leftoverFlags } from "./leftover";
 
 export const DEFAULT_ASSUMPTIONS: Assumptions = {
   statutoryRate: 0.1,
@@ -37,7 +38,7 @@ export function highBidPremium(bid: number, assessedValue: number): number {
   return 0.2 * (bid - threshold);
 }
 
-export function underwrite(lien: Lien, a: Assumptions): Underwriting {
+export function underwrite(lien: Lien, a: Assumptions, book: Lien[] = [lien]): Underwriting {
   const bid = Math.max(lien.amountDue, lien.amountDue + a.overbid);
   const hbp = highBidPremium(bid, lien.assessedValue);
   const conservativeBpo = Math.max(lien.assessedValue * a.bpoHaircut, 1);
@@ -68,7 +69,7 @@ export function underwrite(lien: Lien, a: Assumptions): Underwriting {
       : 0;
   const hbpDragBps = (yieldIfNoHbp - netAnnualizedYield) * 10000;
 
-  const flags = collectFlags(lien);
+  const flags = [...collectFlags(lien), ...leftoverFlags(lien, book)];
   if (effectiveLtv > a.maxEffectiveLtv) {
     flags.push({
       id: "ltv-gate",
@@ -115,6 +116,9 @@ export function underwrite(lien: Lien, a: Assumptions): Underwriting {
   if (flags.some((f) => f.id === "exempt-owner" || f.id === "low-av" || f.id === "commercial-scale")) {
     score = Math.min(score, flags.some((f) => f.id === "exempt-owner" || f.id === "low-av") ? 35 : 58);
   }
+  if (flags.some((f) => f.id.startsWith("leftover-") && f.severity === "hard")) {
+    score = Math.min(score, 42);
+  }
   score = clamp(Math.round(score), 0, 99);
 
   const houseTicket = houseScale && lien.amountDue <= 15000 && lien.hasSitus;
@@ -148,12 +152,13 @@ export function underwrite(lien: Lien, a: Assumptions): Underwriting {
       collateral: Math.round(collateral),
       title: Math.round(title),
     },
+    leftoverRisk: hasLeftoverRisk(flags),
   };
 }
 
 export function rankedLiens(liens: Lien[], assumptions: Assumptions) {
   return liens
-    .map((lien) => ({ lien, uw: underwrite(lien, assumptions) }))
+    .map((lien) => ({ lien, uw: underwrite(lien, assumptions, liens) }))
     .sort(
       (a, b) =>
         b.uw.score - a.uw.score ||

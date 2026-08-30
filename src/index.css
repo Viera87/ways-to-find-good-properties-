@@ -160,7 +160,7 @@ a {
 }
 
 .filters {
-  grid-template-columns: 1.4fr repeat(7, minmax(0, 1fr));
+  grid-template-columns: 1.4fr repeat(8, minmax(110px, 1fr));
   align-items: end;
 }
 
@@ -313,6 +313,26 @@ tr.selected td {
 .type-chip.exempt {
   background: rgba(224, 93, 93, 0.14);
   color: var(--bad);
+}
+
+.leftover-banner {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(224, 93, 93, 0.45);
+  border-radius: 12px;
+  background: rgba(224, 93, 93, 0.08);
+}
+
+.leftover-banner h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: var(--bad);
+}
+
+.leftover-tag {
+  color: var(--bad);
+  font-size: 11px;
+  letter-spacing: 0.02em;
 }
 
 .hint {

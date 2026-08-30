@@ -11,7 +11,7 @@ import { ResultsRecap } from "./components/ResultsRecap";
 import { YearBar } from "./components/YearBar";
 import type { SaleYear } from "./lib/counties";
 import { DEFAULT_ASSUMPTIONS, rankedLiens } from "./lib/underwrite";
-import { money, percent } from "./lib/format";
+import { money } from "./lib/format";
 import { TERM_HELP } from "./lib/glossary";
 import { Hint } from "./components/Hint";
 
@@ -47,6 +47,7 @@ export function App() {
   const ranked = useMemo(() => rankedLiens(liens, assumptions), [liens, assumptions]);
   const accumulate = ranked.filter((r) => r.uw.verdict === "ACCUMULATE");
   const underwriteable = ranked.filter((r) => r.uw.verdict === "ACCUMULATE" || r.uw.verdict === "UNDERWRITE");
+  const leftoverRisk = ranked.filter((r) => r.uw.leftoverRisk);
   const medianFace = ranked[Math.floor(ranked.length / 2)]?.lien.amountDue ?? 0;
   const topBook = underwriteable.slice(0, 25).reduce((sum, r) => sum + r.uw.auctionDayCapital, 0);
 
@@ -109,8 +110,8 @@ export function App() {
             <div className="kpi-value">{money(topBook)}</div>
           </article>
           <article className="kpi">
-            <div className="kpi-label"><Hint entry={TERM_HELP.maxLtv}>Max eff. LTV</Hint></div>
-            <div className="kpi-value">{percent(assumptions.maxEffectiveLtv)}</div>
+            <div className="kpi-label"><Hint entry={TERM_HELP.leftoverKpi}>OTC / leftover risk</Hint></div>
+            <div className="kpi-value">{leftoverRisk.length.toLocaleString()}</div>
           </article>
         </section>
 

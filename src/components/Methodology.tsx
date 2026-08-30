@@ -22,6 +22,16 @@ export function Methodology() {
       </section>
 
       <section className="detail-card">
+        <h3>Phase 0 — Kill leftovers before the sale</h3>
+        <p>
+          County OTC lists are the names the floor already refused. CERTUS flags them on the
+          advertising file: no buildable situs (0, OFF, W/S), face greater than assessed value,
+          entity strips with no house number, same-owner vacant clusters, and face already above
+          15% of AV. Use the Pre-auction book chip. Do not reopen those names on the June leftover PDF.
+        </p>
+      </section>
+
+      <section className="detail-card">
         <h3>Phase 1 — Asset-level underwriting</h3>
         <p>Municipal assessments are not BPOs. Confirm zoning and commercial utility in county GIS, screen EPA databases for historical dry cleaning, fueling, or chemical storage, and discard landlocked remnants, micro-lots, retention basins, and easement-killed parcels.</p>
       </section>
