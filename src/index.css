@@ -373,6 +373,38 @@ tr.selected td {
   gap: 8px;
 }
 
+.pitfall-gate {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(224, 177, 90, 0.45);
+  border-radius: 12px;
+  background: rgba(224, 177, 90, 0.08);
+}
+
+.pitfall-gate.ready {
+  border-color: rgba(61, 186, 139, 0.4);
+  background: rgba(61, 186, 139, 0.08);
+}
+
+.pitfall-gate h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.legal-match {
+  margin: 10px 0;
+}
+
+.legal-blob {
+  margin: 4px 0 6px;
+  padding: 8px 10px;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
 .hint {
   cursor: help;
 }

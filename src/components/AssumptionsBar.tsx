@@ -97,6 +97,17 @@ export function AssumptionsBar({ value, onChange }: Props) {
           onChange={(e) => set("subTaxMonth", e.target.value)}
         />
       </div>
+      <div className="field">
+        <label className="field-label"><Hint entry={TERM_HELP.subTaxMultiple}>Sub-tax reserve ×</Hint></label>
+        <input
+          type="number"
+          step="0.5"
+          min="2"
+          max="3"
+          value={value.subTaxReserveMultiple}
+          onChange={(e) => set("subTaxReserveMultiple", e.target.value)}
+        />
+      </div>
     </section>
   );
 }

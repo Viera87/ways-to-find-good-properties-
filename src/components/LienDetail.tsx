@@ -8,6 +8,7 @@ import { TERM_HELP } from "../lib/glossary";
 import { subsequentTaxPlan } from "../lib/subTaxes";
 import { GoldenRule } from "./GoldenRule";
 import { Hint } from "./Hint";
+import { PitfallGate } from "./PitfallGate";
 import { VerdictChip } from "./VerdictChip";
 import { useEffect, useMemo, useState } from "react";
 
@@ -20,7 +21,7 @@ const CHECKS = [
   { id: "heir", phase: "2", label: "Vesting is not fractionated heirship or open probate" },
   { id: "ltv", phase: "3", label: "Fully burdened LTV still ≤ 15–20% on a conservative as-is BPO" },
   { id: "hbp", phase: "4", label: "High-bid premium and idle capital still leave an acceptable net yield" },
-  { id: "subtax", phase: "4", label: "Cash reserve covers the next tax bill so a new lien cannot prime this certificate" },
+  { id: "subtax", phase: "4", label: "2×–3× the annual levy sits in cash after ACH so a new lien cannot prime this certificate" },
 ];
 
 type Props = {
@@ -93,7 +94,9 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
             ))}
           </div>
         </section>
-      ) : null}
+      ) : (
+        <PitfallGate lien={lien} uw={uw} assumptions={assumptions} />
+      )}
 
       {lien.saleResult ? (
         <section className="phase" style={{ marginTop: 12 }}>

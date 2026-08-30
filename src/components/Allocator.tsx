@@ -58,8 +58,9 @@ export function Allocator({ liens, assumptions, onOpen }: Props) {
         <p className="section-kicker">Capital allocator</p>
         <h2 className="address" style={{ fontSize: 24 }}>Fill a book, not a bid sheet</h2>
         <p className="owner">
-          Pack auction-day ACH (taxes due + HBP) by CERTUS score per dollar. The golden rule holds
-          the next tax levy out of desk cash so a new certificate cannot prime the book.
+          Pack auction-day ACH (taxes due + HBP) by CERTUS score per dollar. This is locked capital —
+          not emergency money — until the owner redeems or you finish foreclosure. The golden rule
+          holds 2×–3× the annual levy out of desk cash so a new certificate cannot prime the book.
         </p>
         <div className="field" style={{ marginTop: 12 }}>
           <label className="field-label"><Hint entry={TERM_HELP.deskCash}>Desk cash</Hint></label>

@@ -20,10 +20,14 @@ export function subsequentBillsDuringHold(holdMonths: number, firstBillMonth: nu
  * Cash that must sit after auction ACH. The golden rule always reserves at least
  * the next full levy — you need that check written when the bill posts, not a pro-rata scrap.
  */
-export function subsequentTaxReserve(assessedValue: number, a: Pick<Assumptions, "subsequentTaxRate" | "holdMonths" | "subTaxMonth">): number {
+export function subsequentTaxReserve(
+  assessedValue: number,
+  a: Pick<Assumptions, "subsequentTaxRate" | "holdMonths" | "subTaxMonth" | "subTaxReserveMultiple">,
+): number {
   const annual = annualSubsequentBill(assessedValue, a.subsequentTaxRate);
   const bills = subsequentBillsDuringHold(a.holdMonths, a.subTaxMonth);
-  return annual * Math.max(bills, 1);
+  const multiple = Number.isFinite(a.subTaxReserveMultiple) ? a.subTaxReserveMultiple : 2.5;
+  return annual * Math.max(multiple, bills, 1);
 }
 
 export function subsequentTaxPlan(
@@ -38,6 +42,7 @@ export function subsequentTaxPlan(
     annualBill,
     firstBillMonth: a.subTaxMonth,
     billsDuringHold: Math.max(billsDuringHold, 1),
+    reserveMultiple: a.subTaxReserveMultiple,
     reserve,
     auctionDayCapital,
     capitalToOwn: auctionDayCapital + reserve,

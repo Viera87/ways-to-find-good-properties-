@@ -25,14 +25,14 @@ const house = (id: string, face: number, av: number): Lien => ({
 describe("allocateCapital", () => {
   it("holds subsequent-tax reserve out of desk cash so a new levy cannot prime the book", () => {
     const liens = [house("a", 2000, 200000), house("b", 2000, 200000)];
-    const without = allocateCapital(liens, DEFAULT_ASSUMPTIONS, 5000, {
+    const without = allocateCapital(liens, DEFAULT_ASSUMPTIONS, 8000, {
       maxLtv: 0.2,
       requireSitus: true,
       excludeHardFlags: true,
       maxPerCertificate: 15000,
       requireSubTaxReserve: false,
     });
-    const withReserve = allocateCapital(liens, DEFAULT_ASSUMPTIONS, 5000, {
+    const withReserve = allocateCapital(liens, DEFAULT_ASSUMPTIONS, 8000, {
       maxLtv: 0.2,
       requireSitus: true,
       excludeHardFlags: true,
@@ -42,6 +42,6 @@ describe("allocateCapital", () => {
     assert.ok(without.picks.length >= 2);
     assert.equal(withReserve.picks.length, 1);
     assert.ok(withReserve.reserved > 0);
-    assert.ok(withReserve.deployed + withReserve.reserved <= 5000 + 1e-6);
+    assert.ok(withReserve.deployed + withReserve.reserved <= 8000 + 1e-6);
   });
 });

@@ -34,9 +34,9 @@ export function GoldenRule({
         <Hint entry={TERM_HELP.goldenRule}>Golden rule of sub-taxes</Hint>
       </h3>
       <p className="owner">
-        Never buy a certificate unless the next tax bill is already sitting in cash. If that levy
-        posts and you do not pay it, the county sells a new lien. The new investor primes you and
-        the original stake can go to zero.
+        Never buy unless 2× to 3× the annual property-tax bill is already sitting in cash after
+        auction ACH. If that levy posts and you miss it, the county sells a new lien. The new
+        investor primes you and the original stake can go to zero.
       </p>
       <div className="metrics">
         <div className="metric">
@@ -46,6 +46,10 @@ export function GoldenRule({
         <div className="metric">
           <div className="field-label">First bill</div>
           <div className="metric-value">Mo {firstBillMonth}</div>
+        </div>
+        <div className="metric">
+          <div className="field-label">Reserve multiple</div>
+          <div className="metric-value">{assumptions.subTaxReserveMultiple.toFixed(1)}×</div>
         </div>
         <div className="metric">
           <div className="field-label">Bills in hold</div>
@@ -73,9 +77,10 @@ export function GoldenRule({
       ) : null}
       {compact ? null : (
         <p className="owner">
-          Modeled millage {(assumptions.subsequentTaxRate * 100).toFixed(2)}% of SDAT assessed.
-          Paying the bill adds it to the certificate and it earns statutory interest. Not paying
-          it is how the position is lost.
+          Reserve is the greater of {assumptions.subTaxReserveMultiple.toFixed(1)}× the annual levy
+          ({(assumptions.subsequentTaxRate * 100).toFixed(2)}% of SDAT assessed) or the bills that
+          drop during the hold. Paying the bill adds it to the certificate and it earns statutory
+          interest. Not paying it is how the position is lost.
         </p>
       )}
     </section>

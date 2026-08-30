@@ -155,7 +155,7 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   },
   goldenRule: {
     title: "Golden rule of sub-taxes",
-    body: "Never buy a tax lien unless you already have cash for the subsequent tax bill. If a new levy posts and you miss it, the county sells a new certificate. That investor primes you and the original stake can be wiped out.",
+    body: "Never buy unless 2× to 3× the annual levy already sits in cash after auction ACH. If a new bill posts and you miss it, the county sells a new certificate. That investor primes you and the original stake can be wiped out.",
   },
   subTaxBill: {
     title: "Next levy",
@@ -163,7 +163,7 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   },
   subTaxReserve: {
     title: "Sub-tax reserve",
-    body: "Cash that must sit after auction ACH until you pay the next levy (and later bills during the hold). Paying it adds the bill to the certificate and it earns statutory interest. Not paying it lets a new lien take priority.",
+    body: "Cash that must sit after auction ACH. Default is 2.5× the annual levy (set 2×–3×). Paying it adds the bill to the certificate and it earns statutory interest. Not paying it lets a new lien take priority and can wipe the original stake.",
   },
   subTaxRate: {
     title: "Sub-tax millage",
@@ -172,6 +172,26 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   subTaxMonth: {
     title: "First sub-tax month",
     body: "Months after the sale when the next tax bill is expected. Default 6. Later bills are modeled every 12 months after that.",
+  },
+  subTaxMultiple: {
+    title: "Sub-tax reserve multiple",
+    body: "How many years of the modeled levy must sit in cash after auction ACH. The desk default is 2.5×. Use 2× as a floor and 3× when the hold may run past a second bill.",
+  },
+  pitfalls: {
+    title: "Six pitfalls",
+    body: "Interest not the house, no sight-unseen bids, surviving municipal super-liens, illiquid lockup, legal description vs parcel, and a 2×–3× sub-tax reserve. A certificate is not bid-ready until all six are checked on the memo.",
+  },
+  redemptionPath: {
+    title: "Expected path",
+    body: "Redemption — owner, lender, or heir pays you off. Historically the large majority of tax certificates never go to deed. Size the bid as a locked high-yield note, not as a path to own the house.",
+  },
+  lockup: {
+    title: "Capital lockup",
+    body: "Months your cash sits with no ability to sell the certificate like a stock or CD. Owner-occupied 2026 Baltimore County names generally cannot go to complaint before May 27, 2027. Do not bid emergency funds.",
+  },
+  legalDesc: {
+    title: "Legal description vs parcel",
+    body: "The advertising file’s short legal and account ID are what you buy — not the house you drove past. Strip, alley, residue, and open-space language is a hard fail. Always overlay the account on county GIS.",
   },
   deskCash: {
     title: "Desk cash",

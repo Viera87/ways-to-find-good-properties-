@@ -219,6 +219,21 @@ export function diligenceLinks(lien: Lien) {
       note: "Situs, access, adjoining use",
     },
     {
+      label: "Street View (not a drive-by)",
+      href: `https://www.google.com/maps?layer=c&q=${query}`,
+      note: "Stale imagery — still walk or hire a pass before the sale",
+    },
+    {
+      label: "Code / 311 enforcement",
+      href: "https://www.baltimorecountymd.gov/departments/permits/code-inspection-and-enforcement",
+      note: "Demo orders, weeds, housing cases that can survive the sale",
+    },
+    {
+      label: "County utilities / water",
+      href: "https://www.baltimorecountymd.gov/departments/public-works/bureau-of-utilities",
+      note: "Unpaid water/sewer can attach after a deed",
+    },
+    {
       label: "SDAT Real Property",
       href: "https://sdat.dat.maryland.gov/RealProperty/Pages/default.aspx",
       note: `Baltimore County · Dist ${lien.district} · Acct ${lien.parcel}`,

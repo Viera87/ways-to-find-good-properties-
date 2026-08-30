@@ -43,6 +43,7 @@ export type Assumptions = {
   overbid: number;
   subsequentTaxRate: number;
   subTaxMonth: number;
+  subTaxReserveMultiple: number;
   legalOverhead: number;
   unrecoverableFees: number;
   maxEffectiveLtv: number;

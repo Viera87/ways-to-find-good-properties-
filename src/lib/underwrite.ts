@@ -2,6 +2,7 @@ import type { Assumptions, Lien, Underwriting, Verdict } from "../types";
 import { clamp } from "./format";
 import { collectFlags } from "./diligence";
 import { hasLeftoverRisk, leftoverFlags } from "./leftover";
+import { sliverLegalFlags } from "./pitfalls";
 
 export const DEFAULT_ASSUMPTIONS: Assumptions = {
   statutoryRate: 0.1,
@@ -11,6 +12,7 @@ export const DEFAULT_ASSUMPTIONS: Assumptions = {
   overbid: 0,
   subsequentTaxRate: 0.011,
   subTaxMonth: 6,
+  subTaxReserveMultiple: 2.5,
   legalOverhead: 4500,
   unrecoverableFees: 0,
   maxEffectiveLtv: 0.2,
@@ -69,7 +71,7 @@ export function underwrite(lien: Lien, a: Assumptions, book: Lien[] = [lien]): U
       : 0;
   const hbpDragBps = (yieldIfNoHbp - netAnnualizedYield) * 10000;
 
-  const flags = [...collectFlags(lien), ...leftoverFlags(lien, book)];
+  const flags = [...collectFlags(lien), ...leftoverFlags(lien, book), ...sliverLegalFlags(lien)];
   if (effectiveLtv > a.maxEffectiveLtv) {
     flags.push({
       id: "ltv-gate",
