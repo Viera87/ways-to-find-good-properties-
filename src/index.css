@@ -160,7 +160,7 @@ a {
 }
 
 .filters {
-  grid-template-columns: 1.4fr repeat(6, minmax(0, 1fr));
+  grid-template-columns: 1.4fr repeat(7, minmax(0, 1fr));
   align-items: end;
 }
 
@@ -270,6 +270,49 @@ tr.selected td {
 
 .flag.info {
   color: var(--info);
+}
+
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.type-chip.house {
+  background: rgba(61, 186, 139, 0.16);
+  color: var(--good);
+}
+
+.type-chip.condo {
+  background: rgba(122, 162, 214, 0.16);
+  color: var(--info);
+}
+
+.type-chip.vacant,
+.type-chip.unknown {
+  background: rgba(139, 151, 168, 0.14);
+  color: var(--muted);
+}
+
+.type-chip.acreage {
+  background: rgba(212, 177, 90, 0.16);
+  color: var(--gold);
+}
+
+.type-chip.commercial {
+  background: rgba(224, 177, 90, 0.14);
+  color: var(--warn);
+}
+
+.type-chip.remnant,
+.type-chip.easement,
+.type-chip.exempt {
+  background: rgba(224, 93, 93, 0.14);
+  color: var(--bad);
 }
 
 .hint {

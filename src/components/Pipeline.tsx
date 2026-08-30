@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import type { Assumptions, Lien, Underwriting, Verdict } from "../types";
 import { acresLabel, money, moneyExact, percent } from "../lib/format";
 import { TERM_HELP } from "../lib/glossary";
+import { classifyProperty, PROPERTY_KIND_LABEL, PROPERTY_KINDS, type PropertyKind } from "../lib/propertyType";
 import { Hint } from "./Hint";
 import { LienDetail } from "./LienDetail";
+import { TypeChip } from "./TypeChip";
 import { VerdictChip } from "./VerdictChip";
 
 export type Ranked = { lien: Lien; uw: Underwriting };
@@ -24,6 +26,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
   const hasResults = rows.some((r) => r.lien.saleResult);
   const [situs, setSitus] = useState<"all" | "situs" | "vacant">("all");
   const [scale, setScale] = useState<"all" | "house" | "commercial">(hasResults ? "all" : "house");
+  const [kind, setKind] = useState<"all" | PropertyKind>("all");
   const [maxLtv, setMaxLtv] = useState(0.2);
   const [maxFace, setMaxFace] = useState(hasResults ? 500000 : 25000);
   const [page, setPage] = useState(0);
@@ -42,6 +45,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       if (situs === "vacant" && lien.hasSitus) return false;
       if (scale === "house" && (lien.assessedValue < 75000 || lien.assessedValue > 750000)) return false;
       if (scale === "commercial" && lien.assessedValue < 750000) return false;
+      if (kind !== "all" && classifyProperty(lien).kind !== kind) return false;
       if (uw.effectiveLtv > maxLtv) return false;
       if (lien.amountDue > maxFace) return false;
       if (query) {
@@ -50,7 +54,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       }
       return true;
     });
-  }, [rows, q, district, verdict, situs, scale, maxLtv, maxFace]);
+  }, [rows, q, district, verdict, situs, scale, kind, maxLtv, maxFace]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE));
   const safePage = Math.min(page, pageCount - 1);
@@ -68,6 +72,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
       "netYield",
       "score",
       "verdict",
+      "propertyType",
     ];
     const lines = [
       header.join(","),
@@ -82,6 +87,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
           uw.netAnnualizedYield.toFixed(4),
           uw.score,
           uw.verdict,
+          classifyProperty(lien).kind,
         ].join(","),
       ),
     ];
@@ -159,6 +165,25 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
             </select>
           </div>
           <div className="field">
+            <label className="field-label">
+              <Hint entry={TERM_HELP.propertyType}>Property type</Hint>
+            </label>
+            <select
+              value={kind}
+              onChange={(e) => {
+                setKind(e.target.value as typeof kind);
+                setPage(0);
+              }}
+            >
+              <option value="all">All types</option>
+              {PROPERTY_KINDS.map((k) => (
+                <option key={k} value={k}>
+                  {PROPERTY_KIND_LABEL[k]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
             <label className="field-label">Collateral scale</label>
             <select
               value={scale}
@@ -218,6 +243,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
                 <th><Hint entry={TERM_HELP.score}>Score</Hint></th>
                 <th><Hint entry={TERM_HELP.verdict}>Verdict</Hint></th>
                 <th>Address</th>
+                <th><Hint entry={TERM_HELP.propertyType}>Type</Hint></th>
                 <th><Hint entry={TERM_HELP.face}>Face</Hint></th>
                 <th><Hint entry={TERM_HELP.assessed}>Assessed</Hint></th>
                 <th><Hint entry={TERM_HELP.ltv}>Eff. LTV</Hint></th>
@@ -240,6 +266,7 @@ export function Pipeline({ rows, assumptions, selectedId, onSelect }: Props) {
                     {lien.address || "—"}
                     <div className="owner">{lien.id} · {acresLabel(lien.acres, lien.sqft)}</div>
                   </td>
+                  <td><TypeChip kind={classifyProperty(lien).kind} /></td>
                   <td className="mono">{moneyExact(lien.amountDue)}</td>
                   <td className="mono">{money(lien.assessedValue)}</td>
                   <td className="mono">{percent(uw.effectiveLtv)}</td>

@@ -129,6 +129,14 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
     title: "Counties",
     body: "Maryland’s 24 collectors each run their own sale. There is no statewide registration or live listing API. Open the official portal, register separately, then import that county’s advertising file.",
   },
+  propertyType: {
+    title: "Property type",
+    body: "Automated read of the advertising file only — situs, acreage, assessment, unit language, easement words, and owner name. It is not SDAT land use or a zoning letter. Filter the pipeline by type, then confirm the parcel in county GIS.",
+  },
+  areaCheck: {
+    title: "Location check",
+    body: "Geocodes the street address, then reads FEMA flood zone and the Baltimore County police precinct. CrimeMapping and county police links are the current incident view. The county Part I GIS layer only covers 2017–2020 — that count is not a live safety grade.",
+  },
   legal: {
     title: "Legal / foreclosure overhead",
     body: "Counsel and filing cost loaded into fully burdened LTV. In a pure redemption you may never spend it; include it so takeout names still have an equity pad.",

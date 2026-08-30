@@ -1,1 +1,5 @@
-// Isolated renderer. No Node APIs are exposed to the underwriting desk.
+const { contextBridge, ipcRenderer } = require("electron");
+
+contextBridge.exposeInMainWorld("certusNative", {
+  fetchJson: (url) => ipcRenderer.invoke("certus-fetch-json", url),
+});

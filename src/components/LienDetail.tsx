@@ -1,5 +1,8 @@
 import type { Assumptions, Lien, Underwriting } from "../types";
+import { AreaCheck } from "./AreaCheck";
+import { TypeChip } from "./TypeChip";
 import { diligenceLinks } from "../lib/diligence";
+import { classifyProperty } from "../lib/propertyType";
 import { acresLabel, moneyExact, percentExact } from "../lib/format";
 import { TERM_HELP } from "../lib/glossary";
 import { Hint } from "./Hint";
@@ -43,6 +46,7 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
   };
 
   const links = useMemo(() => diligenceLinks(lien), [lien]);
+  const property = useMemo(() => classifyProperty(lien), [lien]);
   const done = CHECKS.filter((c) => checked[c.id]).length;
 
   return (
@@ -62,9 +66,11 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
         </div>
       </div>
 
-      <div style={{ marginTop: 12 }}>
+      <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <VerdictChip verdict={uw.verdict} />
+        <TypeChip kind={property.kind} />
       </div>
+      <p className="owner" style={{ marginTop: 8 }}>{property.reason}</p>
 
       {lien.saleResult ? (
         <section className="phase" style={{ marginTop: 12 }}>
@@ -130,6 +136,8 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
       </div>
 
       <pre className="formula">{`Effective LTV = (Face ${moneyExact(lien.amountDue)} + Overbid ${moneyExact(assumptions.overbid)} + Sub-taxes ${moneyExact(uw.subsequentTaxes)} + Legal ${moneyExact(assumptions.legalOverhead)} + HBP ${moneyExact(uw.highBidPremium)}) / BPO ${moneyExact(uw.conservativeBpo)}`}</pre>
+
+      <AreaCheck lien={lien} />
 
       <section className="phase">
         <h3>Phase 1 — Asset utility</h3>

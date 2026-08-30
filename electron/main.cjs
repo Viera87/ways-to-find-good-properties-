@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell } = require("electron");
+const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
@@ -82,6 +82,25 @@ if (!gotLock) {
     });
   });
 }
+
+const LOOKUP_HOSTS = new Set([
+  "nominatim.openstreetmap.org",
+  "hazards.fema.gov",
+  "bcgisdata.baltimorecountymd.gov",
+  "geocoding.geo.census.gov",
+]);
+
+ipcMain.handle("certus-fetch-json", async (_event, url) => {
+  const parsed = new URL(String(url));
+  if (parsed.protocol !== "https:" || !LOOKUP_HOSTS.has(parsed.hostname)) {
+    throw new Error("Blocked lookup host");
+  }
+  const res = await fetch(parsed.toString(), {
+    headers: { "User-Agent": "CERTUS-tax-lien-desk/1.0", Accept: "application/json" },
+  });
+  if (!res.ok) throw new Error(`Lookup HTTP ${res.status}`);
+  return res.json();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();

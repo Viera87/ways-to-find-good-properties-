@@ -17,6 +17,8 @@ The **Counties** tab lists all 24 Maryland collectors with that year’s DAT dat
 
 **Accumulate** is reserved for house-scale collateral ($75k–$750k assessed, face ≤ $15k, score ≥ 90). Office parks and jumbo tickets can still be opened via the commercial-takeout preset — they are not treated as the default “best buy.”
 
+The pipeline can filter by **property type** (house, condo/unit, vacant, acreage, commercial, remnant, easement, exempt) from the advertising file. That is not an SDAT land-use code. **Check this location** on a certificate geocodes the situs, reads FEMA flood and the county precinct, and opens CrimeMapping — the county Part I GIS layer only runs 2017–2020 and is not a live safety grade.
+
 ## Desktop app (click to open, self-hosted)
 
 CERTUS is a local Electron app. The underwriting book lives on your machine. Nothing is uploaded.
