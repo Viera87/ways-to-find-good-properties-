@@ -176,7 +176,7 @@ a {
 }
 
 .assumptions {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
 
 .field {
@@ -344,6 +344,33 @@ tr.selected td {
   color: var(--bad);
   font-size: 11px;
   letter-spacing: 0.02em;
+}
+
+.golden-banner {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(61, 186, 139, 0.4);
+  border-radius: 12px;
+  background: rgba(61, 186, 139, 0.08);
+}
+
+.golden-banner.fail {
+  border-color: rgba(224, 93, 93, 0.45);
+  background: rgba(224, 93, 93, 0.08);
+}
+
+.golden-banner h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.golden-banner.fail h3 {
+  color: var(--bad);
+}
+
+.year-stack {
+  display: grid;
+  gap: 8px;
 }
 
 .hint {

@@ -13,7 +13,9 @@ The advertising list is bundled. Change the underwriting sliders and the entire 
 
 Sale years are separated. **2026** is the advertising list to underwrite. **2025** is the Baltimore County August 28 winner file (actual bids, high-bid premiums, bidder book). 2024 and 2023 stay empty until you import those lists.
 
-The **Counties** tab lists all 24 Maryland collectors with that year’s DAT dates and official portals. There is no statewide registration and no public live-listing API — import a county advertising TSV/CSV when they publish it.
+The **Counties** tab lists all 24 Maryland collectors with that year’s DAT dates and official portals. There is no statewide registration and no public live-listing API. Import **one advertising file at a time**. Each county-year is its own book — importing Cecil does not replace Baltimore County.
+
+**Golden rule of sub-taxes:** never buy a certificate unless the next tax bill is already sitting in cash. If that levy posts and you miss it, the county sells a new lien that primes yours. The Allocator holds that reserve out of desk cash; each memo shows the next levy and cash-to-own.
 
 **Accumulate** is reserved for house-scale collateral ($75k–$750k assessed, face ≤ $15k, score ≥ 90). Office parks and jumbo tickets can still be opened via the commercial-takeout preset — they are not treated as the default “best buy.”
 

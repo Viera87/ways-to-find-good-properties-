@@ -10,6 +10,7 @@ import { Pipeline } from "./components/Pipeline";
 import { ResultsRecap } from "./components/ResultsRecap";
 import { YearBar } from "./components/YearBar";
 import type { SaleYear } from "./lib/counties";
+import { findBook, upsertBook, yearCounts } from "./lib/books";
 import { DEFAULT_ASSUMPTIONS, rankedLiens } from "./lib/underwrite";
 import { money } from "./lib/format";
 import { TERM_HELP } from "./lib/glossary";
@@ -40,9 +41,10 @@ export function App() {
   const [assumptions, setAssumptions] = useState<Assumptions>(DEFAULT_ASSUMPTIONS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeYear, setActiveYear] = useState<SaleYear>(2026);
+  const [activeCounty, setActiveCounty] = useState("baltimore-county");
   const [books, setBooks] = useState<LienBook[]>([STARTER_BOOK, BOOK_2025]);
 
-  const book = books.find((b) => b.year === activeYear);
+  const book = findBook(books, activeYear, activeCounty);
   const liens = book?.liens ?? [];
   const ranked = useMemo(() => rankedLiens(liens, assumptions), [liens, assumptions]);
   const accumulate = ranked.filter((r) => r.uw.verdict === "ACCUMULATE");
@@ -82,9 +84,17 @@ export function App() {
       <main className="page">
         <YearBar
           year={activeYear}
-          counts={Object.fromEntries(books.map((b) => [b.year, b.liens.length]))}
-          onChange={(year) => {
+          countyId={book?.countyId ?? activeCounty}
+          books={books}
+          counts={yearCounts(books)}
+          onChangeYear={(year) => {
             setActiveYear(year);
+            const next = findBook(books, year, activeCounty);
+            setActiveCounty(next?.countyId ?? activeCounty);
+            setSelectedId(null);
+          }}
+          onChangeCounty={(countyId) => {
+            setActiveCounty(countyId);
             setSelectedId(null);
           }}
         />
@@ -123,8 +133,8 @@ export function App() {
             <p className="section-kicker">{activeYear} book</p>
             <h2 className="address" style={{ fontSize: 24 }}>No advertising list for {activeYear}</h2>
             <p className="owner">
-              This year is kept separate from the other sale years. Open Counties, pick the collector,
-              and import that year’s TSV/CSV. The {books.find((b) => b.year === 2026) ? "2026 Baltimore County" : "other"} book stays put.
+              Open Counties, pick the collector, and import that year’s TSV/CSV. Other counties
+              already loaded for {activeYear} stay put — one book per county, not one book for the whole year.
             </p>
             <button className="btn primary" type="button" onClick={() => setView("counties")}>
               Go to {activeYear} counties
@@ -133,7 +143,7 @@ export function App() {
         ) : null}
         {view === "pipeline" && liens.length > 0 ? (
           <Pipeline
-            key={`${activeYear}-${book?.source ?? "empty"}`}
+            key={`${activeYear}-${book?.countyId ?? "empty"}-${book?.source ?? "empty"}`}
             rows={ranked}
             assumptions={assumptions}
             selectedId={selectedId}
@@ -154,13 +164,19 @@ export function App() {
           <Counties
             year={activeYear}
             books={books}
-            activeCounty={book?.countyId ?? "baltimore-county"}
-            onImport={(year, countyId, countyName, next, fileName) => {
-              setBooks((prev) => {
-                const incoming: LienBook = { year, countyId, countyName, source: fileName, liens: next };
-                return [...prev.filter((b) => b.year !== year), incoming];
-              });
+            activeCounty={book?.countyId ?? activeCounty}
+            onOpenBook={(year, countyId) => {
               setActiveYear(year);
+              setActiveCounty(countyId);
+              setSelectedId(null);
+              setView("pipeline");
+            }}
+            onImport={(year, countyId, countyName, next, fileName) => {
+              setBooks((prev) =>
+                upsertBook(prev, { year, countyId, countyName, source: fileName, liens: next }),
+              );
+              setActiveYear(year);
+              setActiveCounty(countyId);
               setSelectedId(null);
               setView("pipeline");
             }}

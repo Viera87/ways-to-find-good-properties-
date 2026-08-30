@@ -53,13 +53,25 @@ export function Methodology() {
       </section>
 
       <section className="detail-card">
+        <h3>Golden rule of sub-taxes</h3>
+        <p>
+          Never buy a tax lien if you do not have the cash to pay the subsequent taxes. When a new
+          bill posts and you miss it, the county sells a new certificate. That investor’s lien takes
+          priority and the original investment can be lost entirely. CERTUS sizes the next levy as
+          assessed value × millage (default 1.1%) and holds that reserve out of desk cash on the
+          Allocator. Paying the bill adds it to the certificate and it earns statutory interest.
+        </p>
+        <pre className="formula">{`Cash to own = Auction ACH (face + HBP) + (next levy × bills during hold)`}</pre>
+      </section>
+
+      <section className="detail-card">
         <h3>Statewide calendar — not a live feed</h3>
         <p>
           Maryland’s 24 collectors run sales between March and October. DAT publishes confirmed dates.
           There is no statewide bidder registration and no public API for live listings. Register on each
           county portal (typically $100–$150, W-9, ACH, collector terms). Unsold names often move OTC at
           the finance office after the auction. Import that county’s advertising file on the Counties tab
-          to run the same four-phase screen.
+          to run the same four-phase screen. Import one county at a time; each collector keeps its own book.
         </p>
       </section>
 

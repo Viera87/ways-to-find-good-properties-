@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Lien, LienBook } from "../types";
 import {
   DAT_OMBUDSMAN,
@@ -8,21 +8,28 @@ import {
   saleStatus,
   statusLabel,
 } from "../lib/counties";
+import { booksForYear, shortCounty } from "../lib/books";
 import { parseAdvertisingFile } from "../lib/parseAdvertising";
 
 type Props = {
   year: SaleYear;
   books: LienBook[];
   activeCounty: string;
+  onOpenBook: (year: SaleYear, countyId: string) => void;
   onImport: (year: SaleYear, countyId: string, countyName: string, liens: Lien[], fileName: string) => void;
 };
 
-export function Counties({ year, books, activeCounty, onImport }: Props) {
+export function Counties({ year, books, activeCounty, onOpenBook, onImport }: Props) {
   const [q, setQ] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [importCounty, setImportCounty] = useState(activeCounty);
   const fileRef = useRef<HTMLInputElement>(null);
-  const yearBook = books.find((b) => b.year === year);
+  const yearBooks = booksForYear(books, year);
+  const selectedBook = yearBooks.find((b) => b.countyId === importCounty);
+
+  useEffect(() => {
+    setImportCounty(activeCounty);
+  }, [activeCounty, year]);
 
   const rows = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -52,11 +59,11 @@ export function Counties({ year, books, activeCounty, onImport }: Props) {
     <div className="counties">
       <section className="detail-card">
         <p className="section-kicker">Maryland · 24 collectors · {year}</p>
-        <h2 className="address" style={{ fontSize: 26 }}>One year at a time</h2>
+        <h2 className="address" style={{ fontSize: 26 }}>One book per county</h2>
         <p className="owner">
-          Use the sale-year chips above to separate calendars and advertising books. {year} DAT dates
-          are shown below. Importing a list stores it under <strong>{year}</strong> and leaves other
-          years untouched — so a 2025 Prince George’s file will not overwrite the 2026 Baltimore County book.
+          Import one advertising file at a time. Each file is stored as <strong>{year} + that
+          collector</strong>. A Cecil import does not replace Baltimore County; re-importing the same
+          county replaces only that county’s book. Other sale years stay untouched.
         </p>
         <p className="owner">
           There is still no statewide feed or umbrella registration. Official tracker:
@@ -70,10 +77,24 @@ export function Counties({ year, books, activeCounty, onImport }: Props) {
       <section className="detail-card">
         <p className="section-kicker">Load a {year} advertising list</p>
         <p className="owner">
-          {yearBook
-            ? `${yearBook.countyName} is loaded for ${year} (${yearBook.liens.length.toLocaleString()} names · ${yearBook.source}). Importing again replaces only this year.`
-            : `No advertising book for ${year} yet. Download that year’s list from the county portal and import it here.`}
+          {yearBooks.length === 0
+            ? `No advertising book for ${year} yet. Pick a collector, download that year’s list from its portal, and import it here.`
+            : `${yearBooks.length} county ${yearBooks.length === 1 ? "book" : "books"} loaded for ${year}: ${yearBooks.map((b) => `${shortCounty(b.countyName)} (${b.liens.length.toLocaleString()})`).join(" · ")}. Import another collector without wiping these.`}
         </p>
+        {yearBooks.length > 0 ? (
+          <div className="table-tools" style={{ marginTop: 10 }}>
+            {yearBooks.map((b) => (
+              <button
+                key={b.countyId}
+                className="chip"
+                type="button"
+                onClick={() => onOpenBook(year, b.countyId)}
+              >
+                Open {shortCounty(b.countyName)}
+              </button>
+            ))}
+          </div>
+        ) : null}
         <div className="import-row">
           <select value={importCounty} onChange={(e) => setImportCounty(e.target.value)}>
             {MARYLAND_SALES.map((c) => (
@@ -83,6 +104,11 @@ export function Counties({ year, books, activeCounty, onImport }: Props) {
           <button className="btn primary" type="button" onClick={() => fileRef.current?.click()}>
             Import {year} TSV / CSV
           </button>
+          <span className="owner">
+            {selectedBook
+              ? `Replaces the ${selectedBook.liens.length.toLocaleString()}-name ${selectedBook.countyName} book only.`
+              : "Adds a new county book next to the ones already loaded."}
+          </span>
           <input
             ref={fileRef}
             type="file"
@@ -117,6 +143,7 @@ export function Counties({ year, books, activeCounty, onImport }: Props) {
               <th>Typical window</th>
               <th>Portal</th>
               <th>Register?</th>
+              <th>Book</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -124,6 +151,7 @@ export function Counties({ year, books, activeCounty, onImport }: Props) {
             {rows.map((c) => {
               const stamp = c.dates[year];
               const status = saleStatus(stamp.sort);
+              const loaded = yearBooks.find((b) => b.countyId === c.id);
               return (
                 <tr key={c.id}>
                   <td>
@@ -136,6 +164,15 @@ export function Counties({ year, books, activeCounty, onImport }: Props) {
                     <a href={c.portalUrl} target="_blank" rel="noreferrer">{c.portalName}</a>
                   </td>
                   <td>Separate application</td>
+                  <td>
+                    {loaded ? (
+                      <button className="chip" type="button" onClick={() => onOpenBook(year, c.id)}>
+                        {loaded.liens.length.toLocaleString()} loaded
+                      </button>
+                    ) : (
+                      <span className="owner">—</span>
+                    )}
+                  </td>
                   <td><span className={`status-pill ${status}`}>{statusLabel(status, year)}</span></td>
                 </tr>
               );

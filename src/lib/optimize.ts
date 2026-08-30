@@ -1,9 +1,11 @@
 import type { Assumptions, Lien, Underwriting } from "../types";
+import { subsequentTaxReserve } from "./subTaxes";
 import { underwrite } from "./underwrite";
 
 export type AllocationRow = {
   lien: Lien;
   uw: Underwriting;
+  subTaxReserve: number;
 };
 
 export function allocateCapital(
@@ -15,10 +17,15 @@ export function allocateCapital(
     requireSitus: boolean;
     excludeHardFlags: boolean;
     maxPerCertificate: number;
+    requireSubTaxReserve?: boolean;
   },
-): { picks: AllocationRow[]; leftover: number; deployed: number } {
+): { picks: AllocationRow[]; leftover: number; deployed: number; reserved: number } {
   const ranked = liens
-    .map((lien) => ({ lien, uw: underwrite(lien, assumptions, liens) }))
+    .map((lien) => ({
+      lien,
+      uw: underwrite(lien, assumptions, liens),
+      subTaxReserve: subsequentTaxReserve(lien.assessedValue, assumptions),
+    }))
     .filter((row) => {
       if (row.uw.effectiveLtv > options.maxLtv) return false;
       if (options.requireSitus && !row.lien.hasSitus) return false;
@@ -37,11 +44,16 @@ export function allocateCapital(
 
   const picks: AllocationRow[] = [];
   let leftover = budget;
+  let reserved = 0;
   for (const row of ranked) {
-    if (row.uw.auctionDayCapital <= leftover) {
+    const cost = options.requireSubTaxReserve
+      ? row.uw.auctionDayCapital + row.subTaxReserve
+      : row.uw.auctionDayCapital;
+    if (cost <= leftover) {
       picks.push(row);
-      leftover -= row.uw.auctionDayCapital;
+      leftover -= cost;
+      if (options.requireSubTaxReserve) reserved += row.subTaxReserve;
     }
   }
-  return { picks, leftover, deployed: budget - leftover };
+  return { picks, leftover, deployed: budget - leftover - reserved, reserved };
 }

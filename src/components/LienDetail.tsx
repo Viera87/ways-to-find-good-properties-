@@ -5,6 +5,8 @@ import { diligenceLinks } from "../lib/diligence";
 import { classifyProperty } from "../lib/propertyType";
 import { acresLabel, moneyExact, percentExact } from "../lib/format";
 import { TERM_HELP } from "../lib/glossary";
+import { subsequentTaxPlan } from "../lib/subTaxes";
+import { GoldenRule } from "./GoldenRule";
 import { Hint } from "./Hint";
 import { VerdictChip } from "./VerdictChip";
 import { useEffect, useMemo, useState } from "react";
@@ -18,6 +20,7 @@ const CHECKS = [
   { id: "heir", phase: "2", label: "Vesting is not fractionated heirship or open probate" },
   { id: "ltv", phase: "3", label: "Fully burdened LTV still ≤ 15–20% on a conservative as-is BPO" },
   { id: "hbp", phase: "4", label: "High-bid premium and idle capital still leave an acceptable net yield" },
+  { id: "subtax", phase: "4", label: "Cash reserve covers the next tax bill so a new lien cannot prime this certificate" },
 ];
 
 type Props = {
@@ -47,6 +50,7 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
 
   const links = useMemo(() => diligenceLinks(lien), [lien]);
   const property = useMemo(() => classifyProperty(lien), [lien]);
+  const subTax = useMemo(() => subsequentTaxPlan(lien, assumptions, uw.auctionDayCapital), [lien, assumptions, uw.auctionDayCapital]);
   const done = CHECKS.filter((c) => checked[c.id]).length;
 
   return (
@@ -155,6 +159,16 @@ export function LienDetail({ lien, uw, assumptions }: Props) {
       </div>
 
       <pre className="formula">{`Effective LTV = (Face ${moneyExact(lien.amountDue)} + Overbid ${moneyExact(assumptions.overbid)} + Sub-taxes ${moneyExact(uw.subsequentTaxes)} + Legal ${moneyExact(assumptions.legalOverhead)} + HBP ${moneyExact(uw.highBidPremium)}) / BPO ${moneyExact(uw.conservativeBpo)}`}</pre>
+
+      <GoldenRule
+        assumptions={assumptions}
+        auctionDay={subTax.auctionDayCapital}
+        reserve={subTax.reserve}
+        annualBill={subTax.annualBill}
+        firstBillMonth={subTax.firstBillMonth}
+        billsDuringHold={subTax.billsDuringHold}
+        compact
+      />
 
       <AreaCheck lien={lien} />
 

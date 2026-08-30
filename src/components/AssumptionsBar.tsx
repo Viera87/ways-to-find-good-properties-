@@ -76,6 +76,27 @@ export function AssumptionsBar({ value, onChange }: Props) {
           onChange={(e) => set("maxEffectiveLtv", e.target.value)}
         />
       </div>
+      <div className="field">
+        <label className="field-label"><Hint entry={TERM_HELP.subTaxRate}>Sub-tax millage</Hint></label>
+        <input
+          type="number"
+          step="0.001"
+          min="0"
+          max="0.05"
+          value={value.subsequentTaxRate}
+          onChange={(e) => set("subsequentTaxRate", e.target.value)}
+        />
+      </div>
+      <div className="field">
+        <label className="field-label"><Hint entry={TERM_HELP.subTaxMonth}>First sub-tax month</Hint></label>
+        <input
+          type="number"
+          min="1"
+          max="24"
+          value={value.subTaxMonth}
+          onChange={(e) => set("subTaxMonth", e.target.value)}
+        />
+      </div>
     </section>
   );
 }

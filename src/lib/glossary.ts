@@ -123,11 +123,11 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   },
   saleYear: {
     title: "Sale year",
-    body: "Each Maryland collector runs one annual sale. Switch years to see that DAT calendar and the advertising book you imported for that year. 2026 Baltimore County is loaded; 2025–2023 stay empty until you import those lists.",
+    body: "Each Maryland collector runs one annual sale. Switch years, then switch county books. 2026 Baltimore County is loaded; import other collectors without overwriting it.",
   },
   counties: {
     title: "Counties",
-    body: "Maryland’s 24 collectors each run their own sale. There is no statewide registration or live listing API. Open the official portal, register separately, then import that county’s advertising file.",
+    body: "Maryland’s 24 collectors each run their own sale. There is no statewide registration or live listing API. Import one advertising file at a time. Each county-year is its own book — a new county does not replace one you already loaded.",
   },
   leftover: {
     title: "Leftover / OTC risk",
@@ -148,5 +148,33 @@ export const TERM_HELP: Record<string, GlossaryEntry> = {
   legal: {
     title: "Legal / foreclosure overhead",
     body: "Counsel and filing cost loaded into fully burdened LTV. In a pure redemption you may never spend it; include it so takeout names still have an equity pad.",
+  },
+  countyBook: {
+    title: "County book",
+    body: "One advertising file per collector per sale year. Import Cecil without replacing Baltimore County. Re-importing the same county replaces only that book. There is still no statewide feed — one file at a time.",
+  },
+  goldenRule: {
+    title: "Golden rule of sub-taxes",
+    body: "Never buy a tax lien unless you already have cash for the subsequent tax bill. If a new levy posts and you miss it, the county sells a new certificate. That investor primes you and the original stake can be wiped out.",
+  },
+  subTaxBill: {
+    title: "Next levy",
+    body: "Modeled subsequent tax bill: SDAT assessed value times your sub-tax millage. This is the check that must be written when the new bill comes out — not a pro-rata scrap of the hold.",
+  },
+  subTaxReserve: {
+    title: "Sub-tax reserve",
+    body: "Cash that must sit after auction ACH until you pay the next levy (and later bills during the hold). Paying it adds the bill to the certificate and it earns statutory interest. Not paying it lets a new lien take priority.",
+  },
+  subTaxRate: {
+    title: "Sub-tax millage",
+    body: "Proxy for the next county/state property-tax bill as a fraction of SDAT assessed value. Default 1.1%. Raise it for high-rate towns or sewer/stormwater that travel with the levy.",
+  },
+  subTaxMonth: {
+    title: "First sub-tax month",
+    body: "Months after the sale when the next tax bill is expected. Default 6. Later bills are modeled every 12 months after that.",
+  },
+  deskCash: {
+    title: "Desk cash",
+    body: "Total cash available for this sale year. Auction ACH and the subsequent-tax reserve both come out of this number. If ACH alone fits but the reserve does not, the golden rule fails.",
   },
 };
