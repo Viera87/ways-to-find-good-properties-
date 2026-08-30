@@ -119,7 +119,7 @@ a {
 
 .kpis {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
 }
 
@@ -160,8 +160,19 @@ a {
 }
 
 .filters {
-  grid-template-columns: 1.4fr repeat(8, minmax(110px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   align-items: end;
+}
+
+.filters .field {
+  min-width: 150px;
+  flex: 1 1 150px;
+}
+
+.filters .field:first-child {
+  min-width: 220px;
+  flex: 2 1 220px;
 }
 
 .assumptions {
