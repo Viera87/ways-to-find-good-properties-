@@ -52,6 +52,8 @@
       "target": ["AppImage", "dir"],
       "category": "Office",
       "icon": "build/icons",
+      "executableName": "CERTUS",
+      "desktopName": "CERTUS",
       "artifactName": "CERTUS-${version}-${arch}.${ext}"
     },
     "win": {

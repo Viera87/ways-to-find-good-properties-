@@ -3,6 +3,10 @@ const fs = require("fs");
 const path = require("path");
 
 app.setName("CERTUS");
+// Spreadsheet desk — skip GPU so the window opens on machines without a usable GPU.
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch("disable-gpu");
+app.commandLine.appendSwitch("disable-gpu-compositing");
 
 function iconPath() {
   const candidates = [
