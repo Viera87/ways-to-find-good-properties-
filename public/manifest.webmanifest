@@ -1,0 +1,13 @@
+{
+  "name": "CERTUS — Tax Lien Underwriting Desk",
+  "short_name": "CERTUS",
+  "description": "Self-hosted Maryland tax lien underwriting desk",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
